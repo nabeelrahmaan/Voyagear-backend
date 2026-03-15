@@ -102,3 +102,23 @@ func (r *Repository) InsertAndReturnID(obj interface{}) (string, error) {
 	id := string(idField.String())
 	return id, nil
 }
+
+func (r *Repository) FindDistinct(obj interface{}, field string, query interface{}, args ...interface{}) error {
+	if err := r.DB.Debug().Model(obj).Distinct(field).Where(query, args...).Find(obj).Error; err!= nil {
+		return err
+	}
+
+	return nil
+}
+
+func (r  *Repository) Raw(sql string, values ...interface{}) *gorm.DB {
+	return r.DB.Raw(sql, values...)
+}
+
+func (r *Repository) Save(req interface{}) error {
+	if err := r.DB.Debug().Save(req).Error; err != nil {
+		return err
+	}
+
+	return nil
+}

@@ -8,7 +8,7 @@ import (
 )
 
 type UserAddress struct {
-	ID        string `gorm:"type:uuid;primaryKey"`
+	ID        uuid.UUID `gorm:"type:uuid;primaryKey"`
 	UserID    string `gorm:"type:uuid"`
 	Line1     string
 	Line2     string
@@ -21,6 +21,6 @@ type UserAddress struct {
 }
 
 func (u *UserAddress) BeforeCreate(tx *gorm.DB) error {
-	u.ID = uuid.NewString()
+	u.ID = uuid.New()
 	return nil
 }

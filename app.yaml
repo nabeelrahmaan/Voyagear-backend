@@ -15,9 +15,10 @@ smtp:
   port:587
   username:voyageartravelgear@gmail.com
   password:ucmv mcqj fzjh mdvz
+  from:"Voyagear travel equipments <voyageartravelgear@gmail.com>"
   
 jwt:
-  access_secret:voyage_araccess123
-  refresh_secret:voyagear_refresh123
+  access_secret:"voyage_araccess123"
+  refresh_secret:"voyagear_refresh123"
   access_ttl_minute:15
   refresh_ttl_hour:168

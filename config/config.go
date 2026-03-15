@@ -32,6 +32,7 @@ type SMTPConfig struct {
 	Port     int    `yaml:"port"`
 	Username string `yaml:"username"`
 	Password string `yaml:"password"`
+	From     string `yaml:"from"`
 }
 
 type Config struct {
@@ -45,13 +46,13 @@ func LoadConfig(path string) (*Config, error) {
 
 	cfg := &Config{}
 
-	//read the yaml file
+	// Read the yaml file
 	file, err := os.ReadFile(path)
 	if err != nil {
 		return nil, err
 	}
 
-	//decode the file and assign to the corresponding fields
+	// Decode the file and assign to the corresponding fields
 	if err := yaml.Unmarshal(file, cfg); err != nil {
 		return nil, err
 	}
