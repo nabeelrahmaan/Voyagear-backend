@@ -307,4 +307,64 @@ func (h *AuthController) UpdateProfile(c *gin.Context) {
 	c.JSON(constant.SUCCESS, user)
 }
 
+func (h *AuthController) GetAllUsers(c *gin.Context) {
+
+	users, err := h.authService.GetAllUsers()
+	if err != nil {
+		if appErr, ok := err.(*apperror.AppError); ok {
+			c.JSON(appErr.Code, appErr.Message)
+			return
+		}
+
+		c.JSON(constant.INTERNALSERVERERROR, gin.H{"error":err.Error()})
+		return
+	}
+
+	c.JSON(constant.SUCCESS, users)
+}
+
+func (h *AuthController) ToggleISBlock(c *gin.Context) {
+
+	userID := c.Param("id")
+	if userID == "" {
+		c.JSON(constant.BADREQUEST, gin.H{"error":"User not found"})
+		return
+	}
+
+	user, err := h.authService.ToggleIsBlock(userID)
+	if err != nil {
+		if appErr, ok := err.(*apperror.AppError); ok {
+			c.JSON(appErr.Code, appErr.Message)
+			return
+		}
+
+		c.JSON(constant.INTERNALSERVERERROR, gin.H{"error":"Failed to update user"})
+		return
+	}
+
+	c.JSON(constant.SUCCESS, user)
+}
+
+func (h *AuthController) DeleteUserById(c *gin.Context) {
+
+	userID := c.Param("id")
+	if userID == "" {
+		c.JSON(constant.BADREQUEST, gin.H{"error":"Invalid ID"})
+		return
+	}
+
+	err := h.authService.DeleteUserByID(userID)
+	if err != nil {
+		if appErr, ok := err.(*apperror.AppError); ok {
+			c.JSON(appErr.Code, appErr.Message)
+			return
+		}
+
+		c.JSON(constant.INTERNALSERVERERROR, gin.H{"error":"Failed to delete user"})
+		return
+	}
+
+	c.JSON(constant.SUCCESS, gin.H{"message":"User deleted successfully"})
+}
+
 

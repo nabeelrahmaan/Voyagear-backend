@@ -11,16 +11,19 @@ type Product struct {
 	ID uuid.UUID `gorm:"type:uuid;primaryKey"`
 
 	Name        string `gorm:"not null"`
+	Category    string `gorm:"not null"`
 	ImageURL    string
 	Description string
 
 	Price         int `gorm:"not null"`
 	OriginalPrice int
-	Stock         int `gorm:"default:0"`
+	Stock         int
+	IsActive      bool 
+	Sizes         []ProductSize
 
-	CreatedAt time.Time
+	CreatedAt time.Time 
 	UpdatedAt time.Time
-	DeletedAt time.Time
+	DeletedAt gorm.DeletedAt
 }
 
 func (p *Product) BeforeCreate(tx *gorm.DB) error {

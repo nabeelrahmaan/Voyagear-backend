@@ -48,7 +48,6 @@ func (s *AuthService) Signup(name, useremail, password string) error {
 		Email: useremail,
 		Password: hashpass,
 		IsVerified: false,
-		CreatedAt: time.Now(),
 	}
 
 	// Inserting new user into database
@@ -314,6 +313,7 @@ func (s *AuthService) UpdateProfile(userID, newname string) (*models.User, error
 		)
 	}
 
+	// Storing updates in to map
 	updates := map[string]interface{}{
 		"name": newname,
 	}
@@ -394,4 +394,36 @@ func (s *AuthService) GetAllUsers() ([]models.User, error) {
 	}
 
 	return users, nil
+}
+
+func (s *AuthService) DeleteUserByID (userID string) error {
+
+	var user models.User
+
+	if err := s.Repo.FindById(&user, userID); err != nil {
+		return apperror.New(
+			constant.NOTFOUND,
+			"User not found",
+			err,
+		)
+	}
+	
+	// Avoiding deletion of admin users
+	if user.Role == "admin" {
+		return apperror.New(
+			constant.FORBIDDEN,
+			"Admin users can't be deleted",
+			nil,
+		)
+	}
+
+	if err := s.Repo.Delete(&user, userID); err != nil {
+		return apperror.New(
+			constant.INTERNALSERVERERROR,
+			"Failed to delete user",
+			err,
+		)
+	}
+
+	return nil
 }

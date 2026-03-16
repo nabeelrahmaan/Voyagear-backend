@@ -14,6 +14,9 @@ type PgSQLRepository interface {
 	FindOneWhere(obj interface{}, query string, args ...interface{}) error
 	InsertAndReturnID(obj interface{}) (string, error)
 	FindDistinct(obj interface{}, field string, query interface{}, args ...interface{}) error
+	FindByIDWithPreload(obj interface{}, id string, prealoads ...string) error
+	FindWhereWithPreload(obj interface{}, query string, args []string, preloads ...string) error
+	FindAllWithPreload(obj interface{}, preloads ...string) error
 	Raw(sql string, values ...interface{}) *gorm.DB
 	Save(req interface{}) error
 }

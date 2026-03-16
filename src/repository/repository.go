@@ -122,3 +122,43 @@ func (r *Repository) Save(req interface{}) error {
 
 	return nil
 }
+
+
+// Preloads are used to fetch relations with the data (eg:- fetching sizes with product. otherwise it stays empty)
+func (r *Repository) FindByIDWithPreload(obj interface{}, id interface{}, preloads ...string) error {
+
+	for _, preload := range preloads {
+		r.DB = r.DB.Preload(preload)
+	}
+
+	if err := r.DB.Where("id = ?", id).First(obj).Error; err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (r *Repository) FindWhereWithPreload(obj interface{}, query string, args []interface{}, preloads ...string) error {
+
+	for _, preload := range preloads {
+		r.DB = r.DB.Preload(preload)
+	}
+
+	if err := r.DB.Where(query, args...).Find(obj).Error; err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (r *Repository) FindAllWithPreload(obj interface{}, preloads ...string) error {
+	for _, preload := range preloads {
+		r.DB = r.DB.Preload(preload)
+	}
+
+	if err := r.DB.Find(obj).Error; err != nil {
+		return err
+	}
+
+	return nil
+}
