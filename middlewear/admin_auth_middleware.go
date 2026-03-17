@@ -31,7 +31,7 @@ func AdminAuthMiddleware(repo repository.Repository) gin.HandlerFunc {
 			return 
 		}
 
-		if user.Role == "admin" {
+		if user.Role != "admin" {
 			c.JSON(constant.FORBIDDEN, gin.H{"error":"Admin access required"})
 			c.Abort()
 			return 

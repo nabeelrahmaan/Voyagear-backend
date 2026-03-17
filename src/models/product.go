@@ -19,7 +19,7 @@ type Product struct {
 	OriginalPrice int
 	Stock         int
 	IsActive      bool 
-	Sizes         []ProductSize
+	Variants      []Variants `gorm:"foreignKey:ProductID;references:ID"`
 
 	CreatedAt time.Time 
 	UpdatedAt time.Time

@@ -1,6 +1,12 @@
 package passwords
 
-import "golang.org/x/crypto/bcrypt"
+import (
+	"crypto/sha256"
+	"crypto/subtle"
+	"encoding/hex"
+
+	"golang.org/x/crypto/bcrypt"
+)
 
 func HashPassword (password string) (string, error) {
 	hash, err := bcrypt.GenerateFromPassword(
@@ -18,4 +24,20 @@ func CheckPassword (password, hash string) bool {
 	)
 
 	return err==nil
+}
+
+// Token hashing using SHA256
+func HashToken (token string) string {
+	hashToken := sha256.Sum256([]byte(token))
+	return hex.EncodeToString(hashToken[:])
+}
+
+func CompareTokens (token string, storedHash string) bool {
+	hash := HashToken(token)
+
+	// It compares all byte. prevent timing attacks
+	return subtle.ConstantTimeCompare(
+		[]byte(hash),
+		[]byte(storedHash),
+	) == 1
 }

@@ -8,21 +8,25 @@ import (
 	"voyagear/utils/apperror"
 	"voyagear/utils/constant"
 	"voyagear/utils/email"
+	"voyagear/utils/jwt"
 	"voyagear/utils/otp"
 	passwords "voyagear/utils/password" // check this if something went wrong
 
+	"github.com/google/uuid"
 	"github.com/redis/go-redis/v9"
 )
 
 type AuthService struct {
-	Repo *repository.Repository
-	Redis *cache.Redis
+	Repo       *repository.Repository
+	Redis      *cache.Redis
+	JwtManager *jwt.JWTmanger
 }
 
-func CreateAuthService(repo *repository.Repository, redis *cache.Redis) *AuthService {
+func CreateAuthService(repo *repository.Repository, redis *cache.Redis, jwt *jwt.JWTmanger) *AuthService {
 	return &AuthService{
-		Repo: repo,
-		Redis: redis,
+		Repo:       repo,
+		Redis:      redis,
+		JwtManager: jwt,
 	}
 }
 
@@ -30,7 +34,7 @@ func (s *AuthService) Signup(name, useremail, password string) error {
 	var exist *models.User
 
 	// Check user already exist
-	if err := s.Repo.FindOneWhere(&exist, "email = ?", useremail); err != nil {
+	if err := s.Repo.FindOneWhere(&exist, "email = ?", useremail); err == nil {
 		return apperror.New(
 			constant.BADREQUEST,
 			"Email already exist",
@@ -44,9 +48,9 @@ func (s *AuthService) Signup(name, useremail, password string) error {
 	}
 
 	user := models.User{
-		Name: name,
-		Email: useremail,
-		Password: hashpass,
+		Name:       name,
+		Email:      useremail,
+		Password:   hashpass,
 		IsVerified: false,
 	}
 
@@ -89,7 +93,7 @@ func (s *AuthService) Signup(name, useremail, password string) error {
 }
 
 // VerifyOTP verify user's OTP
-func (s *AuthService) VerifyOTP (useremail, otp string) error {
+func (s *AuthService) VerifyOTP(useremail, otp string) error {
 
 	var user models.User
 
@@ -140,7 +144,7 @@ func (s *AuthService) VerifyOTP (useremail, otp string) error {
 	}
 
 	// Updating user(IsVerified)
-	if err := s.Repo.UpdateByFields(&models.User{}, user.ID, updates);err != nil {
+	if err := s.Repo.UpdateByFields(&models.User{}, user.ID, updates); err != nil {
 		return err
 	}
 
@@ -148,12 +152,12 @@ func (s *AuthService) VerifyOTP (useremail, otp string) error {
 	return nil
 }
 
-func (s *AuthService) Login(email, password string) (*models.User, error) {
+func (s *AuthService) Login(email, password string) (string, string, error) {
 	var user models.User
 
 	// Find user by email
 	if err := s.Repo.FindOneWhere(&user, "email = ? ", email); err != nil {
-		return nil, apperror.New(
+		return "", "", apperror.New(
 			constant.UNAUTHORIZED,
 			"Invalid credentials",
 			err,
@@ -162,7 +166,7 @@ func (s *AuthService) Login(email, password string) (*models.User, error) {
 
 	// Check if user is verified
 	if !user.IsVerified {
-		return nil, apperror.New(
+		return "", "", apperror.New(
 			constant.UNAUTHORIZED,
 			"User not verified",
 			nil,
@@ -171,7 +175,7 @@ func (s *AuthService) Login(email, password string) (*models.User, error) {
 
 	// check if user is blocked
 	if user.IsBlocked {
-		return nil, apperror.New(
+		return "", "", apperror.New(
 			constant.FORBIDDEN,
 			"Your account has been blocked",
 			nil,
@@ -180,14 +184,52 @@ func (s *AuthService) Login(email, password string) (*models.User, error) {
 
 	// Verifying password
 	if passwords.CheckPassword(password, user.Password) {
-		return nil, apperror.New(
+		return "", "", apperror.New(
 			constant.UNAUTHORIZED,
 			"Invalid credentials",
 			nil,
 		)
 	}
 
-	return &user, nil
+	sessionID := uuid.New()
+
+	// Generate new access, refresh tokens
+	accessToken, err := s.JwtManager.GenerateAccessToken(user.ID.String(), user.Role)
+	if err != nil {
+		return "", "", apperror.New(
+			constant.INTERNALSERVERERROR,
+			"Failed to create access token",
+			err,
+		)
+	}
+
+	refreshToken, err := s.JwtManager.GenerateRefreshToken(user.ID.String(), user.Role, sessionID.String())
+	if err != nil {
+		return "", "", apperror.New(
+			constant.INTERNALSERVERERROR,
+			"Failed to create refresh token",
+			err,
+		)
+	}
+
+	hashToken := passwords.HashToken(refreshToken)
+
+	refresh := models.RefreshToken{
+		ID:     sessionID,
+		UserID: user.ID,
+		Token:  hashToken,
+	}
+
+	// Storing refresh token into database
+	if err := s.Repo.Insert(&refresh); err != nil {
+		return "", "", apperror.New(
+			constant.INTERNALSERVERERROR,
+			err.Error(),
+			err,
+		)
+	}
+
+	return accessToken, refreshToken, nil
 }
 
 func (s *AuthService) ForgotPassword(useremail string) error {
@@ -274,7 +316,7 @@ func (s *AuthService) ResetPassword(email, otp, password string) error {
 	updates := map[string]interface{}{
 		"password": newPassword,
 	}
-	
+
 	// Updating user with new password
 	if err := s.Repo.UpdateByFields(&models.User{}, user.ID, updates); err != nil {
 		return apperror.New(
@@ -292,7 +334,7 @@ func (s *AuthService) GetProfile(userID string) (*models.User, error) {
 	var user models.User
 
 	if err := s.Repo.FindById(&user, userID); err != nil {
-		return nil,apperror.New(
+		return nil, apperror.New(
 			constant.NOTFOUND,
 			"User not found",
 			err,
@@ -382,7 +424,7 @@ func (s *AuthService) GetById(userID string) (*models.User, error) {
 }
 
 func (s *AuthService) GetAllUsers() ([]models.User, error) {
-	
+
 	var users []models.User
 
 	if err := s.Repo.FindAll(&users); err != nil {
@@ -396,7 +438,7 @@ func (s *AuthService) GetAllUsers() ([]models.User, error) {
 	return users, nil
 }
 
-func (s *AuthService) DeleteUserByID (userID string) error {
+func (s *AuthService) DeleteUserByID(userID string) error {
 
 	var user models.User
 
@@ -407,7 +449,7 @@ func (s *AuthService) DeleteUserByID (userID string) error {
 			err,
 		)
 	}
-	
+
 	// Avoiding deletion of admin users
 	if user.Role == "admin" {
 		return apperror.New(
@@ -421,6 +463,138 @@ func (s *AuthService) DeleteUserByID (userID string) error {
 		return apperror.New(
 			constant.INTERNALSERVERERROR,
 			"Failed to delete user",
+			err,
+		)
+	}
+
+	return nil
+}
+
+func (s *AuthService) Refresh(token string) (string, string, error) {
+
+	// Validating refresh token
+	claims, err := s.JwtManager.ValidateRefresh(token)
+	if err != nil {
+		return "", "", apperror.New(
+			constant.UNAUTHORIZED,
+			"Invalid token",
+			err,
+		)
+	}
+
+	// Slicing datas from claims
+	sessionID, ok := claims["session_id"].(string)
+	if !ok {
+		return "", "", apperror.New(
+			constant.UNAUTHORIZED,
+			"Session id is missing",
+			nil,
+		)
+	}
+
+	userID, ok := claims["user_id"].(string)
+	if !ok {
+		return "", "", apperror.New(
+			constant.UNAUTHORIZED,
+			"User not found",
+			nil,
+		)
+	}
+
+	role, ok := claims["role"].(string)
+	if !ok {
+		role = "user"
+	}
+
+	// Finding refresh token from database
+	var userToken models.RefreshToken
+	if err := s.Repo.FindOneWhere(&userToken, "id = ?", sessionID); err != nil {
+		return "", "", apperror.New(
+			constant.NOTFOUND,
+			"User not found",
+			err,
+		)
+	}
+
+	// Checking token strings from databse and request
+	if !passwords.CompareTokens(token, userToken.Token) {
+		return "", "", apperror.New(
+			constant.UNAUTHORIZED,
+			"Invalid token",
+			err,
+		)
+	}
+
+	// Validating max session time
+	if time.Since(userToken.CreatedAt) > s.JwtManager.MaxSession {
+		return "", "", apperror.New(
+			constant.UNAUTHORIZED,
+			"Session expired",
+			nil,
+		)
+	}
+
+	// Generating new access and refresh tokens
+	accessToken, err := s.JwtManager.GenerateAccessToken(userID, role)
+	if err != nil {
+		return "", "", apperror.New(
+			constant.INTERNALSERVERERROR,
+			"Failed to create access token",
+			err,
+		)
+	}
+
+	refreshToken, err := s.JwtManager.GenerateRefreshToken(userID, role, sessionID)
+	if err != nil {
+		return "", "", apperror.New(
+			constant.INTERNALSERVERERROR,
+			"Failed to create refresh token",
+			err,
+		)
+	}
+
+	// Updating current refresh token string with new one in database
+	hashToken := passwords.HashToken(refreshToken)
+
+	updates := map[string]interface{}{
+		"token": hashToken,
+	}
+
+	if err := s.Repo.UpdateByFields(&models.RefreshToken{}, userID, updates); err != nil {
+		return "", "", apperror.New(
+			constant.INTERNALSERVERERROR,
+			"Failed to store refresh token",
+			err,
+		)
+	}
+
+	return accessToken, refreshToken, nil
+}
+
+func (s *AuthService) Logout(token string) error {
+
+	claims, err := s.JwtManager.ValidateRefresh(token)
+	if err != nil {
+		return apperror.New(
+			constant.UNAUTHORIZED,
+			"Invalid token",
+			err,
+		)
+	}
+
+	sessionID, ok := claims["session_id"].(string)
+	if !ok {
+		return apperror.New(
+			constant.UNAUTHORIZED,
+			"Session id not found",
+			nil,
+		)
+	}
+
+	if err := s.Repo.Delete(&models.RefreshToken{}, sessionID); err != nil {
+		return apperror.New(
+			constant.INTERNALSERVERERROR,
+			"Failed to delete token",
 			err,
 		)
 	}

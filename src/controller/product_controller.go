@@ -15,7 +15,7 @@ type ProductController struct {
 	Service *services.ProductService
 }
 
-func SetupProductService(service *services.ProductService) *ProductController {
+func SetupProductController(service *services.ProductService) *ProductController {
 	return &ProductController{
 		Service: service,
 	}
@@ -29,10 +29,10 @@ type CreateProductRequest struct {
 	Category      string `json:"category"`
 	ImageURL      string `json:"image_url"`
 
-	Sizes []struct {
+	Variants []struct {
 		Size     string `json:"size"`
 		Quantity int    `json:"quantity"`
-	} `json:"sizes"`
+	} `json:"variants"`
 }
 
 type UpdateProductRequest struct {
@@ -43,7 +43,7 @@ type UpdateProductRequest struct {
 	Category      *string `json:"category"`
 	ImageURL      *string `json:"image_url"`
 	IsActive      *bool   `json:"is_active"`
-	Sizes         *[]struct {
+	Variants         *[]struct {
 		ID       *string `json:"id"`
 		Size     string  `json:"size"`
 		Quantity int     `json:"quantity"`
@@ -58,7 +58,7 @@ func (h *ProductController) CreateProduct(c *gin.Context) {
 		return
 	}
 
-	if req.Name == "" || req.Price <= 0 || len(req.Sizes) == 0 {
+	if req.Name == "" || req.Price <= 0 || len(req.Variants) == 0 {
 		c.JSON(constant.BADREQUEST, gin.H{"error": "name, price, sizes are required"})
 		return
 	}
@@ -73,8 +73,8 @@ func (h *ProductController) CreateProduct(c *gin.Context) {
 		IsActive:      true,
 	}
 
-	for _, s := range req.Sizes {
-		product.Sizes = append(product.Sizes, models.ProductSize{
+	for _, s := range req.Variants {
+		product.Variants = append(product.Variants, models.Variants{
 			Size:     s.Size,
 			Quantity: s.Quantity,
 		})
@@ -107,17 +107,17 @@ func (h *ProductController) UpdateProduct(c *gin.Context) {
 		return
 	}
 
-	var sizes *[]services.UpdateProductSizeInput
-	if req.Sizes != nil {
-		tmp := make([]services.UpdateProductSizeInput, 0, len(*req.Sizes))
-		for _, s := range *req.Sizes {
-			tmp = append(tmp, services.UpdateProductSizeInput{
+	var variants *[]services.UpdateProductVarientsInput
+	if req.Variants != nil {
+		tmp := make([]services.UpdateProductVarientsInput, 0, len(*req.Variants))
+		for _, s := range *req.Variants {
+			tmp = append(tmp, services.UpdateProductVarientsInput{
 				ID:       s.ID,
 				Size:     s.Size,
 				Quantity: s.Quantity,
 			})
 		}
-		sizes = &tmp
+		variants = &tmp
 	}
 
 	input := services.UpdateProductInput{
@@ -128,7 +128,7 @@ func (h *ProductController) UpdateProduct(c *gin.Context) {
 		ImageURL:      req.ImageURL,
 		IsActive:      req.IsActive,
 		Category:      req.Category,
-		Sizes:         sizes,
+		Variants:      variants,
 	}
 
 	product, err := h.Service.UpdateProduct(productID, &input)

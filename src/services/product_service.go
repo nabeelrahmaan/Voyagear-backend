@@ -20,7 +20,7 @@ func SetupProductService(repo *repository.Repository) *ProductService {
 }
 
 // Input structs
-type UpdateProductSizeInput struct {
+type UpdateProductVarientsInput struct {
 	ID       *string
 	Size     string
 	Quantity int
@@ -34,7 +34,7 @@ type UpdateProductInput struct {
 	ImageURL      *string
 	Category      *string
 	IsActive      *bool
-	Sizes         *[]UpdateProductSizeInput
+	Variants         *[]UpdateProductVarientsInput
 }
 
 type ProductFilter struct {
@@ -57,7 +57,7 @@ func (s *ProductService) CreateProduct(product *models.Product) error {
 	if err := s.Repo.Insert(product); err != nil {
 		return apperror.New(
 			constant.INTERNALSERVERERROR,
-			"Failed to create product",
+			err.Error(),
 			err,
 		)
 	}
@@ -137,7 +137,7 @@ func (s *ProductService) GetAllProducts(filter ProductFilter,
 
 	err := s.Repo.DB.Model(&models.Product{}).
 		Where("id IN ?", ids).
-		Preload("sizes").
+		Preload("varients").
 		Order(fmt.Sprintf("array_position(ARRAY[%s]::uuid[], id)", strings.Join(quotedIds, ","))).
 		Find(&Products).Error
 
@@ -147,7 +147,7 @@ func (s *ProductService) GetAllProducts(filter ProductFilter,
 func (s *ProductService) GetProductById(productID string) (*models.Product, error) {
 
 	var product models.Product
-	if err := s.Repo.FindByIDWithPreload(&product, productID, "Sizes"); err != nil {
+	if err := s.Repo.FindByIDWithPreload(&product, productID, "variants"); err != nil {
 		return nil, apperror.New(
 			constant.NOTFOUND,
 			"Product not found",
@@ -184,7 +184,7 @@ func (s *ProductService) DeleteProduct(productID string) error {
 func (s *ProductService) UpdateProduct(productID string, input *UpdateProductInput) (*models.Product, error) {
 
 	var product models.Product
-	if err := s.Repo.FindByIDWithPreload(&product, productID, "Sizes"); err != nil {
+	if err := s.Repo.FindByIDWithPreload(&product, productID, "Variants"); err != nil {
 		return nil, apperror.New(
 			constant.NOTFOUND,
 			"Product not found",
@@ -221,14 +221,14 @@ func (s *ProductService) UpdateProduct(productID string, input *UpdateProductInp
 		if err := s.Repo.UpdateByFields(&models.Product{}, productID, updates); err != nil {
 			return nil, apperror.New(
 				constant.INTERNALSERVERERROR,
-				"Failed to update product",
+				err.Error(),
 				err,
 			)
 		}
 	}
 
-	if input.Sizes != nil {
-		for _, sReq := range *input.Sizes {
+	if input.Variants != nil {
+		for _, sReq := range *input.Variants {
 			if sReq.ID != nil {
 				fields := map[string]interface{}{
 					"size":     sReq.Size,
@@ -246,7 +246,7 @@ func (s *ProductService) UpdateProduct(productID string, input *UpdateProductInp
 				continue
 			}
 
-			newSize := models.ProductSize{
+			newSize := models.Variants{
 				ProductID: product.ID,
 				Size:      sReq.Size,
 				Quantity:  sReq.Quantity,

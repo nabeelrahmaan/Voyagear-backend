@@ -24,7 +24,7 @@ func SendOTP(to string, otp string) error {
 			"subject: Your OTP for Voyagear\r\n"+
 			"MIME-Version: 1.0\r\n"+
 			"Content-Type: text/plain; charset=\"UTF-8\"\r\n\r\n"+
-			"Hello!\n\nYour OTP is: %s\nIt will expire in 5 minutes.\n\nThanks,\nVestra Ecommerce Team",
+			"Hello!\n\nYour OTP is: %s\nIt will expire in 5 minutes.\n\nThanks,\nVoyagear e-commerce team",
 			fromHeader, to, otp,
 	)
 

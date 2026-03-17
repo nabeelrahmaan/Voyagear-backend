@@ -1,24 +1,25 @@
 server:
-  port:3000
+  port: "8080"
 
 db:
-  host:localhost
-  user:postgres
-  name:voyagear
-  password:Nabeel@db9030
-  port:5432
-  sslmode:disable
-  timezone:Asia/Kolkata
+  host: localhost
+  user: postgres
+  name: voyagear
+  password: Nabeel@db9030
+  port: 5432
+  sslmode: disable
+  timezone: Asia/Kolkata
 
 smtp:
-  host:smtp.gmail.com
-  port:587
-  username:voyageartravelgear@gmail.com
-  password:ucmv mcqj fzjh mdvz
-  from:"Voyagear travel equipments <voyageartravelgear@gmail.com>"
+  host: smtp.gmail.com
+  port: 587
+  username: voyageartravelgear@gmail.com
+  password: ucmv mcqj fzjh mdvz
+  from: "Voyagear travel equipments <voyageartravelgear@gmail.com>"
   
 jwt:
-  access_secret:"voyage_araccess123"
-  refresh_secret:"voyagear_refresh123"
-  access_ttl_minute:15
-  refresh_ttl_hour:168
+  access_secret: "voyage_araccess123"
+  refresh_secret: "voyagear_refresh123"
+  access_ttl_minute: 15
+  refresh_ttl_hour: 168
+  max_session: 720

@@ -7,7 +7,7 @@ import (
 )
 
 type ServerConfig struct {
-	Port int `yaml:"port"`
+	Port string `yaml:"port"`
 }
 
 type DBConfig struct {
@@ -25,6 +25,7 @@ type JWTconfig struct {
 	RefreshSecret    string `yaml:"rafresh_secret"`
 	AccessTTLMinutes int    `yaml:"access_ttl_minute"`
 	RefreshTTLHours  int    `yaml:"refresh_ttl_hour"`
+	MaxSessionHours  int    `yaml:"max_session"`
 }
 
 type SMTPConfig struct {

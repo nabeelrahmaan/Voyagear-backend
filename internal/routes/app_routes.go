@@ -10,13 +10,14 @@ import (
 )
 
 func SetupRoutes(
+	r *gin.Engine,
 	auth *controller.AuthController,
 	product *controller.ProductController,
 	jwtManager *jwt.JWTmanger,
 	repo *repository.Repository,
-) *gin.Engine {
-	r := gin.Default()
-
+) {
+	
+	r.GET("/",auth.Test)
 	// ========== Auth rotes (public) ==========
 	authGroup := r.Group("/auth")
 	authGroup.POST("/signup", auth.Signup)
@@ -24,6 +25,7 @@ func SetupRoutes(
 	authGroup.POST("/verify-otp", auth.VerifyOTP)
 	authGroup.POST("/forget-password", auth.ForgotPassword)
 	authGroup.POST("/reset-password", auth.ResetPassword)
+	authGroup.POST("/logout", auth.Logout)
 	r.POST("/refresh", auth.RefreshToken)
 
 	// ========== User routes (protected) ==========
@@ -53,5 +55,4 @@ func SetupRoutes(
 	adminGroup.PATCH("/products/:id", product.UpdateProduct)
 	adminGroup.DELETE("/product/:id", product.DeleteProduct)
 
-	return r
 }
