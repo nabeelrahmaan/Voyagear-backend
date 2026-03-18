@@ -1,19 +1,19 @@
 package services
 
 import (
-	"fmt"
-	"strings"
 	"voyagear/src/models"
 	"voyagear/src/repository"
 	"voyagear/utils/apperror"
 	"voyagear/utils/constant"
+
+	"github.com/google/uuid"
 )
 
 type ProductService struct {
-	Repo *repository.Repository
+	Repo repository.PgSQLRepository
 }
 
-func SetupProductService(repo *repository.Repository) *ProductService {
+func SetupProductService(repo repository.PgSQLRepository) *ProductService {
 	return &ProductService{
 		Repo: repo,
 	}
@@ -37,14 +37,6 @@ type UpdateProductInput struct {
 	Variants         *[]UpdateProductVarientsInput
 }
 
-type ProductFilter struct {
-	Search   string
-	Category string
-	Size     string
-	MinPrice int
-	MaxPrice int
-}
-
 func (s *ProductService) CreateProduct(product *models.Product) error {
 	if product == nil {
 		return apperror.New(
@@ -65,89 +57,26 @@ func (s *ProductService) CreateProduct(product *models.Product) error {
 	return nil
 }
 
-func (s *ProductService) GetAllProducts(filter ProductFilter,
+func (s *ProductService) GetAllProducts(filter repository.ProductFilter,
 	page, pageSize int,
 	sortBy, sortOrder string,
 ) ([]models.Product, int64, error) {
 
-	var (
-		ids        []string
-		Products   []models.Product
-		totalCount int64
-	)
-
-	db := s.Repo.DB.Table("products p")
-
-	// Checking filters for filter products
-	if filter.Search != "" {
-		search := "%" + filter.Search + "%"
-		db = db.Where("(p.name ILIKE ? OR p.description ILIKE ?)", search, search)
+	if page <= 0 {
+		page = 1
 	}
 
-	if filter.Category != "" {
-		db = db.Where("p.category = ?", filter.Category)
+	if pageSize <= 0 {
+		pageSize = 10
 	}
 
-	if filter.MinPrice > 0 {
-		db = db.Where("p.price >= ?", filter.MinPrice)
-	}
-
-	if filter.MaxPrice > 0 {
-		db = db.Where("p.price <= ?", filter.MaxPrice)
-	}
-
-	if filter.Category != "" {
-		db = db.Where("p.category = ?", filter.Category)
-	}
-
-	if filter.Size != "" {
-		db = db.Joins("JOIN product_sizes ps ON ps.product_id == p.id").
-			Where("ps.size = ?", filter.Size)
-	}
-
-	db.Select("COUNT(DISTINCT p.id)").Count(&totalCount)
-
-	offset := (page - 1) * pageSize
-
-	// Sorting products
-	sortCol := "p.category"
-	if sortBy == "name" {
-		sortCol = "p.name"
-	}
-	if sortBy == "price" {
-		sortCol = "p.price"
-	}
-
-	if err := db.Select("p.id").
-		Group("p.id, "+sortCol).
-		Order(sortCol+" "+sortOrder).
-		Limit(pageSize).Offset(offset).
-		Pluck("p.id", &ids).Error; err != nil {
-		return nil, 0, err
-	}
-
-	if len(ids) == 0 {
-		return []models.Product{}, totalCount, nil
-	}
-
-	var quotedIds []string
-	for _, id := range ids {
-		quotedIds = append(quotedIds, fmt.Sprintf("'%s'", id))
-	}
-
-	err := s.Repo.DB.Model(&models.Product{}).
-		Where("id IN ?", ids).
-		Preload("varients").
-		Order(fmt.Sprintf("array_position(ARRAY[%s]::uuid[], id)", strings.Join(quotedIds, ","))).
-		Find(&Products).Error
-
-	return Products, totalCount, err
+	return s.Repo.GetAllProducts(repository.ProductFilter(filter), page, pageSize, sortBy, sortOrder)
 }
 
 func (s *ProductService) GetProductById(productID string) (*models.Product, error) {
 
 	var product models.Product
-	if err := s.Repo.FindByIDWithPreload(&product, productID, "variants"); err != nil {
+	if err := s.Repo.FindByIDWithPreload(&product, productID, "Variants"); err != nil {
 		return nil, apperror.New(
 			constant.NOTFOUND,
 			"Product not found",
@@ -228,40 +157,41 @@ func (s *ProductService) UpdateProduct(productID string, input *UpdateProductInp
 	}
 
 	if input.Variants != nil {
-		for _, sReq := range *input.Variants {
-			if sReq.ID != nil {
-				fields := map[string]interface{}{
-					"size":     sReq.Size,
-					"quantity": sReq.Quantity,
+		for _, pv := range *input.Variants {
+			if pv.ID != nil {
+				updates := map[string]interface{}{
+					"size":pv.Size,
+					"quantity":pv.Quantity,
 				}
 
-				// Updating product size seperately
-				if err := s.Repo.UpdateByFields(&models.Product{}, *sReq.ID, fields); err != nil {
+				if err := s.Repo.UpdateByFields(&models.Variants{}, productID, updates); err != nil {
 					return nil, apperror.New(
 						constant.INTERNALSERVERERROR,
-						"Failed to update product size",
+						"Failed to update variants",
 						err,
 					)
 				}
+
 				continue
 			}
 
-			newSize := models.Variants{
-				ProductID: product.ID,
-				Size:      sReq.Size,
-				Quantity:  sReq.Quantity,
+			prodVariant := models.Variants{
+				ProductID: uuid.MustParse(productID),
+				Size: pv.Size,
+				Quantity: pv.Quantity,
 			}
-			if err := s.Repo.Insert(&newSize); err != nil {
+
+			if err := s.Repo.Insert(&prodVariant); err != nil {
 				return nil, apperror.New(
 					constant.INTERNALSERVERERROR,
-					"Failed to add product size",
+					"Failed to insert new variant",
 					err,
 				)
 			}
 		}
 	}
 
-	if err := s.Repo.FindByIDWithPreload(&product, productID, "Sizes"); err != nil {
+	if err := s.Repo.FindByIDWithPreload(&product, productID, "Variants"); err != nil {
 		return nil, apperror.New(
 			constant.INTERNALSERVERERROR,
 			"Failed to fetch updated product",

@@ -8,6 +8,7 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
+// Hashing string using bcrypt algorithm (mainly for passwords) - max length 72 bit
 func HashPassword (password string) (string, error) {
 	hash, err := bcrypt.GenerateFromPassword(
 		[]byte(password),
@@ -17,6 +18,7 @@ func HashPassword (password string) (string, error) {
 	return string(hash), err
 }
 
+// Comparing stored hash and password from request using bcrypt algorithm
 func CheckPassword (password, hash string) bool {
 	err := bcrypt.CompareHashAndPassword(
 		[]byte(hash),
@@ -26,7 +28,7 @@ func CheckPassword (password, hash string) bool {
 	return err==nil
 }
 
-// Token hashing using SHA256
+// Token hashing using SHA256 algorithm
 func HashToken (token string) string {
 	hashToken := sha256.Sum256([]byte(token))
 	return hex.EncodeToString(hashToken[:])

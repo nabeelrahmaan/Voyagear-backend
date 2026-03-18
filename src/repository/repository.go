@@ -2,7 +2,10 @@ package repository
 
 import (
 	"errors"
+	"fmt"
 	"reflect"
+	"strings"
+	"voyagear/src/models"
 
 	"gorm.io/gorm"
 )
@@ -15,6 +18,14 @@ func SetupRepo(db *gorm.DB) *Repository {
 	return &Repository{
 		DB: db,
 	}
+}
+
+type ProductFilter struct {
+	Search   string
+	Category string
+	Size     string
+	MinPrice int
+	MaxPrice int
 }
 
 func (r *Repository) Insert(req interface{}) error {
@@ -42,7 +53,7 @@ func (r *Repository) Update(obj interface{}, id interface{}, update interface{})
 }
 
 func (r *Repository) UpdateByFields(obj interface{}, id interface{}, fields map[string]interface{}) error {
-	if err := r.DB.Debug().Model(obj).Where("id = ?", id).Updates(fields).Error; err != nil {
+	if err := r.DB.Debug().Session(&gorm.Session{NewDB: true}).Model(obj).Where("id = ?", id).Updates(fields).Error; err != nil {
 		return err
 	}
 	return nil
@@ -161,4 +172,81 @@ func (r *Repository) FindAllWithPreload(obj interface{}, preloads ...string) err
 	}
 
 	return nil
+}
+
+func (r *Repository) GetAllProducts(filter ProductFilter, page, pagesize int, sortBy, sortOrder string ) ([]models.Product, int64, error) {
+
+	var (
+		ids        []string
+		Products   []models.Product
+		totalCount int64
+	)
+	
+	db := r.DB.Table("prducts p")
+
+	if filter.Search != "" {
+		search :=  "%" + filter.Search + "%"
+		db = db.Where("(p.name ILIKE ? OR p.description ILIKE ?)", search, search)
+	}
+
+	if filter.Category != "" {
+		db = db.Where("p.category = ?", filter.Category)
+	}
+
+	if filter.MinPrice > 0 {
+		db = db.Where("p.price >= ?", filter.MinPrice)
+	}
+
+	if filter.MinPrice > 0 {
+		db = db.Where("p.price <= ?", filter.MaxPrice)
+	}
+
+	if filter.Size != "" {
+		db = db.Joins("JOIN variants v ON v.product_id = p.id").
+		Where("v.size = ?", filter.Size)
+	}
+
+	db.Select("COUNT(DISTINCT p.id)").Count(&totalCount)
+
+	offset := (page - 1) * pagesize
+
+	sortCol := "p.created_at"
+	switch sortBy {
+	case "name":
+		sortCol = "p.name"
+	case "price":
+		sortCol = "p.price"
+	}
+
+	if sortOrder != "asc" && sortOrder != "desc" {
+		sortOrder = "asc"
+	}
+
+	err := db.Select("p.id").
+		Group("p.id, " + sortCol).
+		Order(sortCol + " " + sortOrder).
+		Limit(pagesize).
+		Offset(offset).
+		Pluck("p.id", &ids).Error
+
+	if err != nil {
+		return nil, 0, err
+	}
+
+	if len(ids) == 0 {
+		return []models.Product{}, totalCount, nil
+	}
+
+	var quotedIds []string
+	for _, id := range ids {
+		quotedIds = append(quotedIds, fmt.Sprintf("'%s'", id))
+	}
+
+	err = r.DB.Model(&models.Product{}).
+		Where("id IN ?", ids).
+		Preload("variants").
+		Order(fmt.Sprintf("array_positions(ARRAY[%s]::uuid[], id)", strings.Join(quotedIds, ","))).
+		Find(&Products).Error
+
+	return Products, totalCount, err
 }

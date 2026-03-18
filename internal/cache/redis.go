@@ -6,6 +6,8 @@ import (
 	"github.com/redis/go-redis/v9"
 )
 
+
+// Creating a single-noded stand alone redis
 var Ctx = context.Background()
 
 type Redis struct {

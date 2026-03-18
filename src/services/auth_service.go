@@ -17,12 +17,12 @@ import (
 )
 
 type AuthService struct {
-	Repo       *repository.Repository
+	Repo       repository.PgSQLRepository
 	Redis      *cache.Redis
 	JwtManager *jwt.JWTmanger
 }
 
-func CreateAuthService(repo *repository.Repository, redis *cache.Redis, jwt *jwt.JWTmanger) *AuthService {
+func CreateAuthService(repo repository.PgSQLRepository, redis *cache.Redis, jwt *jwt.JWTmanger) *AuthService {
 	return &AuthService{
 		Repo:       repo,
 		Redis:      redis,

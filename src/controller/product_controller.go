@@ -4,6 +4,7 @@ import (
 	"math"
 	"strconv"
 	"voyagear/src/models"
+	"voyagear/src/repository"
 	"voyagear/src/services"
 	"voyagear/utils/apperror"
 	"voyagear/utils/constant"
@@ -169,7 +170,7 @@ func (h *ProductController) GetProductById(c *gin.Context) {
 
 func (h *ProductController) GetAllProducts(c *gin.Context) {
 
-	filter := services.ProductFilter{
+	filter := repository.ProductFilter{
 		Category: c.Query("category"),
 		Search:   c.Query("q"),
 		Size:     c.Query("size"),
