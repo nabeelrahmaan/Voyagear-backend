@@ -6,7 +6,6 @@ import (
 	"reflect"
 	"strings"
 	"voyagear/src/models"
-
 	"gorm.io/gorm"
 )
 
@@ -61,6 +60,14 @@ func (r *Repository) UpdateByFields(obj interface{}, id interface{}, fields map[
 
 func (r *Repository) Delete(obj interface{}, id interface{}) error {
 	if err := r.DB.Debug().Where("id = ?", id).Delete(obj).Error; err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (r *Repository) DeleteOneWhere(obj interface{}, query string, args ...interface{}) error {
+	if err := r.DB.Debug().Where(query, args...).Delete(obj).Error; err != nil {
 		return err
 	}
 

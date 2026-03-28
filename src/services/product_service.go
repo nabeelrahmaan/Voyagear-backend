@@ -34,7 +34,7 @@ type UpdateProductInput struct {
 	ImageURL      *string
 	Category      *string
 	IsActive      *bool
-	Variants         *[]UpdateProductVarientsInput
+	Variant         *[]UpdateProductVarientsInput
 }
 
 func (s *ProductService) CreateProduct(product *models.Product) error {
@@ -76,7 +76,7 @@ func (s *ProductService) GetAllProducts(filter repository.ProductFilter,
 func (s *ProductService) GetProductById(productID string) (*models.Product, error) {
 
 	var product models.Product
-	if err := s.Repo.FindByIDWithPreload(&product, productID, "Variants"); err != nil {
+	if err := s.Repo.FindByIDWithPreload(&product, productID, "Variant"); err != nil {
 		return nil, apperror.New(
 			constant.NOTFOUND,
 			"Product not found",
@@ -113,7 +113,7 @@ func (s *ProductService) DeleteProduct(productID string) error {
 func (s *ProductService) UpdateProduct(productID string, input *UpdateProductInput) (*models.Product, error) {
 
 	var product models.Product
-	if err := s.Repo.FindByIDWithPreload(&product, productID, "Variants"); err != nil {
+	if err := s.Repo.FindByIDWithPreload(&product, productID, "Variant"); err != nil {
 		return nil, apperror.New(
 			constant.NOTFOUND,
 			"Product not found",
@@ -156,18 +156,18 @@ func (s *ProductService) UpdateProduct(productID string, input *UpdateProductInp
 		}
 	}
 
-	if input.Variants != nil {
-		for _, pv := range *input.Variants {
+	if input.Variant != nil {
+		for _, pv := range *input.Variant {
 			if pv.ID != nil {
 				updates := map[string]interface{}{
 					"size":pv.Size,
 					"quantity":pv.Quantity,
 				}
 
-				if err := s.Repo.UpdateByFields(&models.Variants{}, productID, updates); err != nil {
+				if err := s.Repo.UpdateByFields(&models.Variant{}, productID, updates); err != nil {
 					return nil, apperror.New(
 						constant.INTERNALSERVERERROR,
-						"Failed to update variants",
+						"Failed to update variant",
 						err,
 					)
 				}
@@ -175,7 +175,7 @@ func (s *ProductService) UpdateProduct(productID string, input *UpdateProductInp
 				continue
 			}
 
-			prodVariant := models.Variants{
+			prodVariant := models.Variant{
 				ProductID: uuid.MustParse(productID),
 				Size: pv.Size,
 				Quantity: pv.Quantity,
@@ -191,7 +191,7 @@ func (s *ProductService) UpdateProduct(productID string, input *UpdateProductInp
 		}
 	}
 
-	if err := s.Repo.FindByIDWithPreload(&product, productID, "Variants"); err != nil {
+	if err := s.Repo.FindByIDWithPreload(&product, productID, "Variant"); err != nil {
 		return nil, apperror.New(
 			constant.INTERNALSERVERERROR,
 			"Failed to fetch updated product",
@@ -218,7 +218,7 @@ func (s *ProductService) SearchProduct(query string, category string) ([]models.
 		args = append(args, category)
 	}
 
-	if err := s.Repo.FindWhereWithPreload(&products, dbQuery, args, "Sizes"); err != nil {
+	if err := s.Repo.FindWhereWithPreload(&products, dbQuery, args, "Variant"); err != nil {
 		return nil, apperror.New(
 			constant.INTERNALSERVERERROR,
 			"Failed to fetch products",

@@ -7,16 +7,20 @@ import (
 	"gorm.io/gorm"
 )
 
-type Variants struct {
+type Variant struct {
 	ID        uuid.UUID `gorm:"type:uuid;primaryKey"`
-	ProductID uuid.UUID `gorm:"type:uuid;"`
-	Size      string
+	ProductID uuid.UUID `gorm:"type:uuid;uniquIndex:idx_product_size"`
+
+	Product Product `gorm:"foreignKey;ProductID;references:ID"`
+
+	Size string `gorm:"uniquIndex:idx_product_size"`
+
 	Quantity  int
-	CreatedAt time.Time 
-	UpdatedAt time.Time 
+	CreatedAt time.Time
+	UpdatedAt time.Time
 }
 
-func (p *Variants) BeforeCreate(tx *gorm.DB) error {
+func (p *Variant) BeforeCreate(tx *gorm.DB) error {
 	p.ID = uuid.New()
 	return nil
 }

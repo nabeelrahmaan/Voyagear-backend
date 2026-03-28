@@ -35,6 +35,19 @@ func SetupRoutes(
 	userGroup.GET("/profile", auth.GetProfile)
 	userGroup.PUT("/profile", auth.UpdateProfile)
 
+	// Cart
+	cartGroup := userGroup.Group("/cart")
+	cartGroup.POST("/")
+	cartGroup.GET("/")
+	cartGroup.PUT("/:id")
+	cartGroup.DELETE("/:id")
+
+	// Wishlist
+	wishlistGroup := userGroup.Group("/wishlist")
+	wishlistGroup.POST("/")
+	wishlistGroup.GET("/")
+	wishlistGroup.DELETE("/:id")
+
 
 	// ========== Public product routes ==========
 	r.GET("/products", product.GetAllProducts)

@@ -2,7 +2,6 @@ package repository
 
 import (
 	"voyagear/src/models"
-
 	"gorm.io/gorm"
 )
 
@@ -14,6 +13,7 @@ type PgSQLRepository interface {
 	Update(obj interface{}, id interface{}, update interface{}) error
 	UpdateByFields(obj interface{}, id interface{}, fields map[string]interface{}) error
 	Delete(obj interface{}, id interface{}) error
+	DeleteOneWhere(obj interface{}, query string, args ...interface{}) error
 	HardDelete(obj interface{}) error
 	FindAll(obj interface{}) error
 	FindAllWhere(obj interface{}, query interface{}, args ...interface{}) error
