@@ -14,7 +14,6 @@ type CartItem struct {
 	ProductID uuid.UUID `gorm:"type:uuid;index"`
 	VariantID uuid.UUID `gorm:"type:uuid;index"`
 
-	Size     string
 	Quantity int
 
 	Product Product `gorm:"foreignKey:ProductID"`
