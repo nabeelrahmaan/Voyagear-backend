@@ -13,6 +13,8 @@ func SetupRoutes(
 	r *gin.Engine,
 	auth *controller.AuthController,
 	product *controller.ProductController,
+	cart *controller.CartController,
+	wishlist *controller.WishlistController,
 	jwtManager *jwt.JWTmanger,
 	repo *repository.Repository,
 ) {
@@ -37,16 +39,16 @@ func SetupRoutes(
 
 	// Cart
 	cartGroup := userGroup.Group("/cart")
-	cartGroup.POST("/")
-	cartGroup.GET("/")
-	cartGroup.PUT("/:id")
-	cartGroup.DELETE("/:id")
+	cartGroup.POST("/", cart.AddToCart)
+	cartGroup.GET("/", cart.GetCart)
+	cartGroup.PUT("/:id", cart.UpdateCartItem)
+	cartGroup.DELETE("/:id", cart.RemoveCartItem)
 
 	// Wishlist
 	wishlistGroup := userGroup.Group("/wishlist")
-	wishlistGroup.POST("/")
-	wishlistGroup.GET("/")
-	wishlistGroup.DELETE("/:id")
+	wishlistGroup.POST("/", wishlist.AddToWishlist)
+	wishlistGroup.GET("/", wishlist.GetWiahlist)
+	wishlistGroup.DELETE("/:id", wishlist.RemoveFromWishlist)
 
 
 	// ========== Public product routes ==========

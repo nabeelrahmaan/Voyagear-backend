@@ -20,19 +20,19 @@ func NewAuthController(service *services.AuthService) *AuthController {
 
 // Request structs
 type signupRequest struct {
-	Name     string `json:"name"`
-	Email    string `json:"email"`
-	Password string `json:"password"`
+	Name     string `json:"name" validate:"required,min=3,max=50"`
+	Email    string `json:"email" validate:"required,email"`
+	Password string `json:"password" validate:"required,min=6"`
 }
 
 type loginRequest struct {
-	Email    string `json:"email"`
-	Password string `json:"password"`
+	Email    string `json:"email" validate:"required,email"`
+	Password string `json:"password" validate:"required"`
 }
 
 type verifyOTPRequest struct {
-	Email string `json:"email"`
-	OTP   string `json:"otp"`
+	Email string `json:"email" validate:"required,email"`
+	OTP   string `json:"otp" validate:"required"`
 }
 
 type refreshRequest struct {
@@ -40,17 +40,17 @@ type refreshRequest struct {
 }
 
 type forgotPasswordRequest struct {
-	Email string `json:"email"`
+	Email string `json:"email" validate:"required,email"`
 }
 
 type resetPasswordRequest struct {
-	Email       string `json:"email"`
-	OTP         string `json:"otp"`
-	NewPassword string `json:"new_password"`
+	Email       string `json:"email" validate:"required,email"`
+	OTP         string `json:"otp" validate:"required"`
+	NewPassword string `json:"new_password" validate:"required,min=6"`
 }
 
 type updateProfileRequest struct {
-	Name string `json:"name"`
+	Name string `json:"name" validate:"required,min=3,max=50"`
 }
 
 func (h *AuthController) Test(c *gin.Context) {
