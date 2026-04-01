@@ -24,6 +24,9 @@ type PgSQLRepository interface {
 	FindWhereWithPreload(obj interface{}, query string, args []interface{}, preloads ...string) error
 	FindAllWithPreload(obj interface{}, preloads ...string) error
 	GetAllProducts(filter ProductFilter, page, pageSize int, sortBy, sortOrder string) ([]models.Product, int64, error)
-	Raw(sql string, values ...interface{}) *gorm.DB
+	Raw(sql string, values ...interface{}) error
 	Save(req interface{}) error
+	Begin() *gorm.DB
+	Commit(tx *gorm.DB) error
+	Rollback(tx *gorm.DB) error
 }

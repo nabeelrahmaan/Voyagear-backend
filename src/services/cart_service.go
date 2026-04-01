@@ -31,8 +31,7 @@ func (c *CartService) GetCart(userID string) (*models.Cart, error) {
 
 	var cart models.Cart
 
-	args := []interface{}{}
-	args = append(args, uid)
+	args := []interface{}{uid}
 
 	err = c.Repo.FindWhereWithPreload(cart, "user_id = ?", args, "CartItem")
 	if err != nil {

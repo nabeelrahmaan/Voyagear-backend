@@ -129,8 +129,11 @@ func (r *Repository) FindDistinct(obj interface{}, field string, query interface
 	return nil
 }
 
-func (r  *Repository) Raw(sql string, values ...interface{}) *gorm.DB {
-	return r.DB.Raw(sql, values...)
+func (r  *Repository) Raw(sql string, values ...interface{}) error {
+	if err := r.DB.Raw(sql, values...).Error; err != nil {
+		return err
+	}
+	return nil
 }
 
 func (r *Repository) Save(req interface{}) error {
@@ -256,4 +259,25 @@ func (r *Repository) GetAllProducts(filter ProductFilter, page, pagesize int, so
 		Find(&Products).Error
 
 	return Products, totalCount, err
+}
+
+// Begin starts a database transaction
+func (r *Repository) Begin() *gorm.DB {
+	return r.DB.Begin()
+}
+
+// Commit commits a transaction
+func (r *Repository) Commit(tx *gorm.DB) error {
+	if err := tx.Commit().Error; err != nil {
+		return err
+	}
+	return nil
+}
+
+// Rollback rolls back a transaction
+func (r *Repository) Rollback(tx *gorm.DB) error {
+	if err := tx.Rollback().Error; err != nil {
+		return err
+	}
+	return nil
 }

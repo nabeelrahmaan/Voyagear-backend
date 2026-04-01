@@ -9,7 +9,7 @@ import (
 
 type UserAddress struct {
 	ID        uuid.UUID `gorm:"type:uuid;primaryKey"`
-	UserID    string `gorm:"type:uuid"`
+	UserID    string    `gorm:"type:uuid"`
 	Line1     string
 	Line2     string
 	City      string

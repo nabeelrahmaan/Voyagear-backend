@@ -11,8 +11,8 @@ type OrderItem struct {
 	ID        uuid.UUID `gorm:"type:uuid;primaryKey"`
 	OrderID   uuid.UUID `gorm:"type:uuid"`
 	ProductID uuid.UUID `gorm:"type:uuid"`
+	VariantID uuid.UUID `gorm:"type:uuid"`
 
-	Size     string
 	Quantity int
 	Price    int
 

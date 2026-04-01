@@ -15,6 +15,7 @@ func SetupRoutes(
 	product *controller.ProductController,
 	cart *controller.CartController,
 	wishlist *controller.WishlistController,
+	order *controller.OrderController,
 	jwtManager *jwt.JWTmanger,
 	repo *repository.Repository,
 ) {
@@ -50,6 +51,14 @@ func SetupRoutes(
 	wishlistGroup.GET("/", wishlist.GetWiahlist)
 	wishlistGroup.DELETE("/:id", wishlist.RemoveFromWishlist)
 
+	// Order
+	orderGroup := userGroup.Group("/order")
+	orderGroup.GET("/", order.GetUserOrders)
+	orderGroup.POST("/", order.PlaceOrder)
+	orderGroup.GET("/:id", order.GetOrderDetails)
+	orderGroup.PUT("/:id/cancel", order.UpdateOrderStatusUser)
+	orderGroup.DELETE("/:id", order.DeleteOrder)
+
 
 	// ========== Public product routes ==========
 	r.GET("/products", product.GetAllProducts)
@@ -69,5 +78,9 @@ func SetupRoutes(
 	adminGroup.POST("/products", product.CreateProduct)
 	adminGroup.PATCH("/products/:id", product.UpdateProduct)
 	adminGroup.DELETE("/product/:id", product.DeleteProduct)
+
+	// Orders
+	adminGroup.GET("/orders", order.GetAllOrders)
+	adminGroup.PUT("/orders/:id", order.UpdateOrderStatusAdmin)
 
 }
