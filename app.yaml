@@ -23,3 +23,7 @@ jwt:
   access_ttl_minute: 15
   refresh_ttl_hour: 168
   max_session: 720
+
+razorpay:
+  key_id: rzp_live_SYWuL2HxVjVMQ3
+  key_secret: 7ADoColl9d3mW9ueWCAgjTUJ

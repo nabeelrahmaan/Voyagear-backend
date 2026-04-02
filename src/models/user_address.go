@@ -8,16 +8,16 @@ import (
 )
 
 type UserAddress struct {
-	ID        uuid.UUID `gorm:"type:uuid;primaryKey"`
-	UserID    string    `gorm:"type:uuid"`
-	Line1     string
-	Line2     string
-	City      string
-	State     string
-	Zipcode   string
-	IsDefault bool
-	CreatedAt time.Time
-	UpdatedAt time.Time
+	ID        uuid.UUID `gorm:"type:uuid;primaryKey" json:"id"`
+	UserID    string    `gorm:"type:uuid" json:"user_id" validate:"required"` 
+	Line1     string	`json:"line_1"`
+	Line2     string	`json:"line_2"`
+	City      string	`json:"city" validate:"required"`
+	State     string	`json:"state" validate:"required"`
+	Zipcode   string    `json:"zipcode" validate:"required"`
+	IsDefault bool		`gorm:"default:true" json:"is_default"`
+	CreatedAt time.Time `json:"created_at"`
+	UpdatedAt time.Time `json:"updated_at"`
 }
 
 func (u *UserAddress) BeforeCreate(tx *gorm.DB) error {

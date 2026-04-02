@@ -51,6 +51,8 @@ func main() {
 	productService := services.SetupProductService(repo)
 	productController := controller.SetupProductController(productService)
 
+	
+
 		routes.SetupRoutes(
 			r,
 			authController,

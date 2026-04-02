@@ -36,11 +36,17 @@ type SMTPConfig struct {
 	From     string `yaml:"from"`
 }
 
+type RazorpayConfig struct {
+	KeyID     string `yaml:"key_id"`
+	KeySecret string `yaml:"key_secret"`
+}
+
 type Config struct {
-	Server ServerConfig `yaml:"server"`
-	DB     DBConfig     `yaml:"db"`
-	SMTP   SMTPConfig   `yaml:"smtp"`
-	JWT    JWTconfig    `yaml:"jwt"`
+	Server   ServerConfig   `yaml:"server"`
+	DB       DBConfig       `yaml:"db"`
+	SMTP     SMTPConfig     `yaml:"smtp"`
+	JWT      JWTconfig      `yaml:"jwt"`
+	Razorpay RazorpayConfig `yaml:"razorpay"`
 }
 
 func LoadConfig(path string) (*Config, error) {

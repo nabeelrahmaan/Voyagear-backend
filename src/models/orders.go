@@ -8,13 +8,20 @@ import (
 )
 
 type Order struct {
-	ID        uuid.UUID `gorm:"type:uuid;primaryKey"`
-	UserID    uuid.UUID `gorm:"type:uuid"`
-	Total     int
-	Status    string
-	Items     []OrderItem
-	CreatedAt time.Time
-	UpdatedAt time.Time
+	ID                uuid.UUID `gorm:"type:uuid;primaryKey"`
+	UserID            uuid.UUID `gorm:"type:uuid"`
+
+	Total             int
+	Status            string
+	PaymentMethod	  string
+	PaymentStatus 	  string `gorm:"default:pending"`
+
+	RazorpayOrderID   string `gorm:"type:varchar(100)" json:"razorpay_order_id,omitempty"`
+	RazorpayPaymentID string `gorm:"type:varchar(100)" json:"razorpay_payment_id,omitempty"`
+
+	Items             []OrderItem
+	CreatedAt         time.Time
+	UpdatedAt         time.Time
 }
 
 func (o *Order) BeforeCreate(tx *gorm.DB) error {

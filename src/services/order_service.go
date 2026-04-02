@@ -23,11 +23,12 @@ func SetupOrderService(repo repository.PgSQLRepository) *OrderService {
 }
 
 type PlaceOrderRequest struct {
-	Type      string `json:"type" validate:"required,oneof=cart direct"`
-	ProductID string `json:"product_id"`
-	Quantity  int    `json:"quantity"`
-	Size      string `json:"size"`
-	AddressID string `json:"address_id" validate:"required,uuid"`
+	Type          string `json:"type" validate:"required,oneof=cart direct"`
+	ProductID     string `json:"product_id"`
+	Quantity      int    `json:"quantity"`
+	PaymentMethod string `json:"payment_method"`
+	Size          string `json:"size"`
+	AddressID     string `json:"address_id" validate:"required,uuid"`
 }
 
 func (s *OrderService) GetUserOrders(userID string) ([]models.Order, error) {
@@ -131,7 +132,7 @@ func (s *OrderService) PlaceOrder(userID string, req PlaceOrderRequest) (order *
 	newOrder := models.Order{
 		UserID:    uId,
 		Total:     total,
-		Status:    constant.PLACED,
+		Status:    constant.OrderStatusConfirmed,
 		CreatedAt: time.Now(),
 		UpdatedAt: time.Now(),
 	}
@@ -343,7 +344,7 @@ func (s *OrderService) CancelOrder(userID, orderID string) (err error) {
 		return apperror.New(constant.INTERNALSERVERERROR, "Failed to fetch order", err)
 	}
 
-	if order.Status == constant.CANCELLED || order.Status == constant.DELIVERED {
+	if order.Status == constant.OrderStatusCancelled || order.Status == constant.OrderStatusDelivered {
 		return apperror.New(constant.BADREQUEST, "Cannot cancel delivered or already cancelled orders", nil)
 	}
 
@@ -363,7 +364,7 @@ func (s *OrderService) CancelOrder(userID, orderID string) (err error) {
 
 	// Update order status
 	if err = tx.Model(&order).Updates(map[string]interface{}{
-		"status":     constant.CANCELLED,
+		"status":     constant.OrderStatusCancelled,
 		"updated_at": time.Now(),
 	}).Error; err != nil {
 		return apperror.New(constant.INTERNALSERVERERROR, "Failed to cancel order", err)
@@ -393,7 +394,7 @@ func (s *OrderService) DeleteOrder(userID string, orderID string) error {
 	}
 
 	// Check order status(must be cancelled)
-	if order.Status != constant.CANCELLED {
+	if order.Status != constant.OrderStatusCancelled {
 		return apperror.New(constant.BADREQUEST, "Can only delete cancelled orders", err)
 	}
 
@@ -426,7 +427,7 @@ func (s *OrderService) GetAllOrders(statusFilter, userIdFilter string) ([]models
 		query = "status = ?"
 		args = []interface{}{statusFilter}
 
-	}else if userIdFilter != "" {
+	} else if userIdFilter != "" {
 
 		uID, err := uuid.Parse(userIdFilter)
 		if err != nil {
@@ -434,9 +435,9 @@ func (s *OrderService) GetAllOrders(statusFilter, userIdFilter string) ([]models
 		}
 
 		query = "user_id = ?"
-		args = []interface{}{ uID}
+		args = []interface{}{uID}
 
-	}else {
+	} else {
 		if err := s.Repo.FindAllWithPreload(&orders, "Items.Product"); err != nil {
 			return nil, apperror.New(constant.INTERNALSERVERERROR, "Failed to fetch all orders", err)
 		}
@@ -445,7 +446,7 @@ func (s *OrderService) GetAllOrders(statusFilter, userIdFilter string) ([]models
 	}
 
 	if err := s.Repo.FindWhereWithPreload(&orders, query, args, "Items.Product"); err != nil {
-		return nil, apperror.New(constant.INTERNALSERVERERROR, "Failed to fetch orders", err) 
+		return nil, apperror.New(constant.INTERNALSERVERERROR, "Failed to fetch orders", err)
 	}
 
 	return orders, nil
@@ -464,7 +465,7 @@ func (s *OrderService) UpdateOrderStatusAdmin(orderID, newStatus string) error {
 	}
 
 	// If cancelling, restore stock
-	if newStatus == constant.CANCELLED && order.Status != constant.CANCELLED {
+	if newStatus == constant.OrderStatusCancelled && order.Status != constant.OrderStatusCancelled {
 		tx := s.Repo.Begin()
 		if tx.Error != nil {
 			return apperror.New(constant.INTERNALSERVERERROR, "Failed to start transaction", nil)
@@ -502,8 +503,8 @@ func (s *OrderService) UpdateOrderStatusAdmin(orderID, newStatus string) error {
 
 	// Normal status update
 	if err := s.Repo.UpdateByFields(&order, oID, map[string]interface{}{
-		"status": newStatus,
-		"updated_at":time.Now(),
+		"status":     newStatus,
+		"updated_at": time.Now(),
 	}); err != nil {
 		return apperror.New(constant.INTERNALSERVERERROR, "Failed to update order status", err)
 	}
@@ -512,7 +513,7 @@ func (s *OrderService) UpdateOrderStatusAdmin(orderID, newStatus string) error {
 }
 
 func (s *OrderService) UpdateOrderStatusUser(userID string, orderID string, status string) error {
-	if status != constant.CANCELLED {
+	if status != constant.OrderStatusCancelled {
 		return apperror.New(constant.BADREQUEST, "Users can only cancel orders", nil)
 	}
 	return s.CancelOrder(userID, orderID)

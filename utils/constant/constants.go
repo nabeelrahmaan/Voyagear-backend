@@ -12,17 +12,43 @@ var (
 	INTERNALSERVERERROR = 500
 
 	// Generic status strings
-	PENDING        = "Pending"
 	INVALID_REQ    = "Invalid request body"
-	UN_AUTH  = "Unauthorized"
-	INTERNAL_ERROR = "INTERNAL_ERROR"
-	PAID           = "PAID"
-	FAILED         = "FAILED"
+	UN_AUTH        = "Unauthorized"
+	INTERNAL_ERROR = "Internal error"
 
-	// Payment or process
-	PROCESSING = "PROCESSING"
-	CANCELLED  = "CANCELLED"
-	PLACED     = "PLACED"
-	SHIPPED    = "SHIPPED"
-	DELIVERED  = "DELIVERED"
+	// Order status
+	OrderStatusPending   = "pending"
+	OrderStatusConfirmed = "confirmed"
+	OrderStatusShipped   = "shipped"
+	OrderStatusDelivered = "delivered"
+	OrderStatusCancelled = "cancelled"
+
+	// payment methods
+	PaymentMethodsCOD     = "cod"
+	PaymentMethodRazorpay = "razorpay"
+
+	//payment status
+	PaymentStatusPending  = "pending"
+	PaymentStatusPaid     = "paid"
+	PaymentStatusFailed   = "failed"
+	PaymentStatusRefunded = "refunded"
 )
+
+// const (
+// 	//order status
+// 	OrderStatusPending   OrderStatus = "pending"
+// 	OrderStatusConfirmed OrderStatus = "confirmed"
+// 	OrderStatusShipped   OrderStatus = "shipped"
+// 	OrderStatusDelivered OrderStatus = "delivered"
+// 	OrderStatusCancelled OrderStatus = "cancelled"
+
+// 	// payment methods
+// 	PaymentMethodsCOD     PaymentMethod = "cod"
+// 	PaymentMethodRazorpay PaymentMethod = "razorpay"
+
+// 	//payment status
+// 	PaymentStatusPending  PaymentStatus = "pending"
+// 	PaymentStatusPaid     PaymentStatus = "paid"
+// 	PaymentStatusFailed   PaymentStatus = "failed"
+// 	PaymentStatusRefunded PaymentStatus = "refunded"
+// )
