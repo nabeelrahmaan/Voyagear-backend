@@ -9,11 +9,11 @@ import (
 
 type Variant struct {
 	ID        uuid.UUID `gorm:"type:uuid;primaryKey"`
-	ProductID uuid.UUID `gorm:"type:uuid;uniquIndex:idx_product_size"`
+	ProductID uuid.UUID `gorm:"type:uuid;uniqueIndex:idx_product_size"`
 
-	Product Product `gorm:"foreignKey;ProductID;references:ID"`
+	Product Product `gorm:"foreignKey:ProductID;references:ID" json:"-"`
 
-	Size string `gorm:"uniquIndex:idx_product_size"`
+	Size string `gorm:"uniqueIndex:idx_product_size"`
 
 	Quantity  int
 	CreatedAt time.Time
@@ -23,4 +23,13 @@ type Variant struct {
 func (p *Variant) BeforeCreate(tx *gorm.DB) error {
 	p.ID = uuid.New()
 	return nil
+}
+
+
+type VariantResponse struct {
+	ID        uuid.UUID `json:"id"`
+	Size      string    `json:"size"`
+	Quantity  int       `json:"quantity"`
+	CreatedAt time.Time `json:"created_at"`
+	UpdatedAt time.Time `json:"updated_at"`
 }

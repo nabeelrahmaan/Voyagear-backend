@@ -4,6 +4,8 @@ import (
 	"voyagear/src/services"
 	"voyagear/utils/apperror"
 	"voyagear/utils/constant"
+	"voyagear/utils/logger"
+	"voyagear/utils/validation"
 
 	"github.com/gin-gonic/gin"
 )
@@ -20,9 +22,9 @@ func NewAuthController(service *services.AuthService) *AuthController {
 
 // Request structs
 type signupRequest struct {
-	Name     string `json:"name" validate:"required,min=3,max=50"`
+	Name     string `json:"name" validate:"required,min=3,max=50,alpha_space"`
 	Email    string `json:"email" validate:"required,email"`
-	Password string `json:"password" validate:"required,min=6"`
+	Password string `json:"password" validate:"required,min=6,strong_pwd"`
 }
 
 type loginRequest struct {
@@ -46,11 +48,11 @@ type forgotPasswordRequest struct {
 type resetPasswordRequest struct {
 	Email       string `json:"email" validate:"required,email"`
 	OTP         string `json:"otp" validate:"required"`
-	NewPassword string `json:"new_password" validate:"required,min=6"`
+	NewPassword string `json:"new_password" validate:"required,min=6,strong_pwd"`
 }
 
 type updateProfileRequest struct {
-	Name string `json:"name" validate:"required,min=3,max=50"`
+	Name string `json:"name" validate:"required,min=3,max=50,alpha_space"`
 }
 
 func (h *AuthController) Test(c *gin.Context) {
@@ -61,7 +63,7 @@ func (h *AuthController) Signup(c *gin.Context) {
 	var req signupRequest
 
 	if err := c.ShouldBindJSON(&req); err != nil {
-		c.JSON(constant.BADREQUEST, gin.H{"error": constant.INVALID_REQ})
+		c.JSON(constant.BADREQUEST, validation.FormatValidationErrors(err))
 		return
 	}
 
@@ -72,10 +74,12 @@ func (h *AuthController) Signup(c *gin.Context) {
 			return
 		}
 
+		logger.Log.Errorf("User signup failed internally: %v", err)
 		c.JSON(constant.INTERNALSERVERERROR, gin.H{"error": err.Error()})
 		return
 	}
 
+	logger.Log.Infof("New user registered successfully with email: %s", req.Email)
 	c.JSON(constant.CREATED, gin.H{"message": "User created successfully. OTP sent to email"})
 }
 
@@ -83,7 +87,7 @@ func (h *AuthController) VerifyOTP(c *gin.Context) {
 	var req verifyOTPRequest
 
 	if err := c.ShouldBindJSON(&req); err != nil {
-		c.JSON(constant.BADREQUEST, gin.H{"error": constant.INVALID_REQ})
+		c.JSON(constant.BADREQUEST, validation.FormatValidationErrors(err))
 		return
 	}
 
@@ -106,7 +110,7 @@ func (h *AuthController) Login(c *gin.Context) {
 	var req loginRequest
 
 	if err := c.ShouldBindJSON(&req); err != nil {
-		c.JSON(constant.BADREQUEST, gin.H{"error": constant.INVALID_REQ})
+		c.JSON(constant.BADREQUEST, validation.FormatValidationErrors(err))
 		return
 	}
 
@@ -117,9 +121,12 @@ func (h *AuthController) Login(c *gin.Context) {
 			return
 		}
 
+		logger.Log.Errorf("User login failed internally for %s: %v", req.Email, err)
 		c.JSON(constant.INTERNALSERVERERROR, gin.H{"error": err.Error()})
 		return
 	}
+
+	logger.Log.Infof("User logged in successfully: %s", req.Email)
 
 	// accessToken, err := h.jwtManager.GenerateAccessToken(user.ID.String(), user.Role)
 	// if err != nil {
@@ -231,7 +238,7 @@ func (h *AuthController) ForgotPassword(c *gin.Context) {
 	var req forgotPasswordRequest
 
 	if err := c.ShouldBindJSON(&req); err != nil {
-		c.JSON(constant.BADREQUEST, gin.H{"error": constant.INVALID_REQ})
+		c.JSON(constant.BADREQUEST, validation.FormatValidationErrors(err))
 		return
 	}
 
@@ -253,7 +260,7 @@ func (h *AuthController) ResetPassword(c *gin.Context) {
 	var req resetPasswordRequest
 
 	if err := c.ShouldBindJSON(&req); err != nil {
-		c.JSON(constant.BADREQUEST, gin.H{"error": constant.INVALID_REQ})
+		c.JSON(constant.BADREQUEST, validation.FormatValidationErrors(err))
 		return
 	}
 
@@ -308,7 +315,7 @@ func (h *AuthController) UpdateProfile(c *gin.Context) {
 
 	var req updateProfileRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
-		c.JSON(constant.BADREQUEST, gin.H{"error": constant.INVALID_REQ})
+		c.JSON(constant.BADREQUEST, validation.FormatValidationErrors(err))
 		return
 	}
 

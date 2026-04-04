@@ -508,7 +508,7 @@ func (s *AuthService) Refresh(token string) (string, string, error) {
 
 	// Finding refresh token from database
 	var userToken models.RefreshToken
-	if err := s.Repo.FindOneWhere(&userToken, "id = ?", sessionID); err != nil {
+	if err := s.Repo.FindOneWhere(&userToken, "user_id = ?", userID); err != nil {
 		return "", "", apperror.New(
 			constant.NOTFOUND,
 			"User not found",

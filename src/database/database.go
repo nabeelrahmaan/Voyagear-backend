@@ -11,7 +11,7 @@ import (
 
 var pgOnce sync.Once
 
-func SetupDatbase(cfg *config.Config) (*gorm.DB) {
+func SetupDatabase(cfg *config.Config) (*gorm.DB) {
 	pgDB := &gorm.DB{}
 	pgOnce.Do(func()  {
 		

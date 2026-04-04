@@ -10,6 +10,8 @@ import (
 type Order struct {
 	ID                uuid.UUID `gorm:"type:uuid;primaryKey"`
 	UserID            uuid.UUID `gorm:"type:uuid"`
+	AddressID         uuid.UUID `gorm:"type:uuid"`
+	Address           UserAddress `gorm:"foreignKey:AddressID"`
 
 	Total             int
 	Status            string

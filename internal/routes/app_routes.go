@@ -1,7 +1,7 @@
 package routes
 
 import (
-	"voyagear/middlewear"
+	"voyagear/middleware"
 	"voyagear/src/controller"
 	"voyagear/src/repository"
 	"voyagear/utils/jwt"
@@ -16,11 +16,13 @@ func SetupRoutes(
 	cart *controller.CartController,
 	wishlist *controller.WishlistController,
 	order *controller.OrderController,
+	payment *controller.PaymentController,
+	address *controller.AddressController,
 	jwtManager *jwt.JWTmanger,
 	repo *repository.Repository,
 ) {
-	
-	r.GET("/",auth.Test)
+
+	r.GET("/", auth.Test)
 	// ========== Auth rotes (public) ==========
 	authGroup := r.Group("/auth")
 	authGroup.POST("/signup", auth.Signup)
@@ -32,7 +34,7 @@ func SetupRoutes(
 	r.POST("/refresh", auth.RefreshToken)
 
 	// ========== User routes (protected) ==========
-	userGroup := r.Group("/user", middlewear.AuthMiddleware(jwtManager))
+	userGroup := r.Group("/user", middleware.AuthMiddleware(jwtManager))
 
 	// Profile
 	userGroup.GET("/profile", auth.GetProfile)
@@ -48,7 +50,7 @@ func SetupRoutes(
 	// Wishlist
 	wishlistGroup := userGroup.Group("/wishlist")
 	wishlistGroup.POST("/", wishlist.AddToWishlist)
-	wishlistGroup.GET("/", wishlist.GetWiahlist)
+	wishlistGroup.GET("/", wishlist.GetWishlist)
 	wishlistGroup.DELETE("/:id", wishlist.RemoveFromWishlist)
 
 	// Order
@@ -59,15 +61,28 @@ func SetupRoutes(
 	orderGroup.PUT("/:id/cancel", order.UpdateOrderStatusUser)
 	orderGroup.DELETE("/:id", order.DeleteOrder)
 
+	// Address
+	addressGroup := userGroup.Group("/address")
+	addressGroup.POST("/", address.CreateAddress)
+	addressGroup.GET("/", address.GetAddresses)
+	addressGroup.PUT("/:id", address.UpdateAddress)
+	addressGroup.DELETE("/:id", address.DeleteAddress)
+
+	// Payment Gateway
+	paymentGroup := userGroup.Group("/payment")
+	paymentGroup.POST("/create", payment.CreatePayment)
+	paymentGroup.POST("/verify", payment.VerifyPayment)
+	paymentGroup.GET("/", payment.GetUserPayments)
+	paymentGroup.GET("/:id", payment.GetUserPaymentByID)
+	paymentGroup.PUT("/:id/cancel", payment.CancelPayment)
 
 	// ========== Public product routes ==========
 	r.GET("/products", product.GetAllProducts)
 	r.GET("/products/search", product.SearchProduct)
 	r.GET("/product/:id", product.GetProductById)
 
-
 	// ========== Admin routes (protected) ==========
-	adminGroup := r.Group("/admin", middlewear.AuthMiddleware(jwtManager), middlewear.AdminAuthMiddleware(*repo))
+	adminGroup := r.Group("/admin", middleware.AuthMiddleware(jwtManager), middleware.AdminAuthMiddleware(*repo))
 
 	// Users
 	adminGroup.GET("/users", auth.GetAllUsers)
@@ -82,5 +97,9 @@ func SetupRoutes(
 	// Orders
 	adminGroup.GET("/orders", order.GetAllOrders)
 	adminGroup.PUT("/orders/:id", order.UpdateOrderStatusAdmin)
+
+	// Payments
+	adminGroup.GET("/payments/:id", payment.GetPaymentByIDAdmin)
+	adminGroup.PUT("/payments/:id/status", payment.UpdatePaymentStatusAdmin)
 
 }

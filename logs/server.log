@@ -1,0 +1,638 @@
+[GIN] 2026/04/04 - 10:44:51 | 500 |   4.19ms |             ::1 | GET      "/user/wishlist/"
+[GIN] 2026/04/04 - 10:44:53 | 500 |   3.79ms |             ::1 | GET      "/user/wishlist/"
+[36mINFO[0m[2026-04-04 10:45:26] Server Logging Architecture System Actively Initialized 
+[GIN-debug] [WARNING] Creating an Engine instance with the Logger and Recovery middleware already attached.
+
+[GIN-debug] [WARNING] Running in "debug" mode. Switch to "release" mode in production.
+ - using env:	export GIN_MODE=release
+ - using code:	gin.SetMode(gin.ReleaseMode)
+
+[GIN-debug] GET    /                         --> voyagear/src/controller.(*AuthController).Test-fm (3 handlers)
+[GIN-debug] POST   /auth/signup              --> voyagear/src/controller.(*AuthController).Signup-fm (3 handlers)
+[GIN-debug] POST   /auth/login               --> voyagear/src/controller.(*AuthController).Login-fm (3 handlers)
+[GIN-debug] POST   /auth/verify-otp          --> voyagear/src/controller.(*AuthController).VerifyOTP-fm (3 handlers)
+[GIN-debug] POST   /auth/forget-password     --> voyagear/src/controller.(*AuthController).ForgotPassword-fm (3 handlers)
+[GIN-debug] POST   /auth/reset-password      --> voyagear/src/controller.(*AuthController).ResetPassword-fm (3 handlers)
+[GIN-debug] POST   /auth/logout              --> voyagear/src/controller.(*AuthController).Logout-fm (3 handlers)
+[GIN-debug] POST   /refresh                  --> voyagear/src/controller.(*AuthController).RefreshToken-fm (3 handlers)
+[GIN-debug] GET    /user/profile             --> voyagear/src/controller.(*AuthController).GetProfile-fm (4 handlers)
+[GIN-debug] PUT    /user/profile             --> voyagear/src/controller.(*AuthController).UpdateProfile-fm (4 handlers)
+[GIN-debug] POST   /user/cart/               --> voyagear/src/controller.(*CartController).AddToCart-fm (4 handlers)
+[GIN-debug] GET    /user/cart/               --> voyagear/src/controller.(*CartController).GetCart-fm (4 handlers)
+[GIN-debug] PUT    /user/cart/:id            --> voyagear/src/controller.(*CartController).UpdateCartItem-fm (4 handlers)
+[GIN-debug] DELETE /user/cart/:id            --> voyagear/src/controller.(*CartController).RemoveCartItem-fm (4 handlers)
+[GIN-debug] POST   /user/wishlist/           --> voyagear/src/controller.(*WishlistController).AddToWishlist-fm (4 handlers)
+[GIN-debug] GET    /user/wishlist/           --> voyagear/src/controller.(*WishlistController).GetWishlist-fm (4 handlers)
+[GIN-debug] DELETE /user/wishlist/:id        --> voyagear/src/controller.(*WishlistController).RemoveFromWishlist-fm (4 handlers)
+[GIN-debug] GET    /user/order/              --> voyagear/src/controller.(*OrderController).GetUserOrders-fm (4 handlers)
+[GIN-debug] POST   /user/order/              --> voyagear/src/controller.(*OrderController).PlaceOrder-fm (4 handlers)
+[GIN-debug] GET    /user/order/:id           --> voyagear/src/controller.(*OrderController).GetOrderDetails-fm (4 handlers)
+[GIN-debug] PUT    /user/order/:id/cancel    --> voyagear/src/controller.(*OrderController).UpdateOrderStatusUser-fm (4 handlers)
+[GIN-debug] DELETE /user/order/:id           --> voyagear/src/controller.(*OrderController).DeleteOrder-fm (4 handlers)
+[GIN-debug] POST   /user/address/            --> voyagear/src/controller.(*AddressController).CreateAddress-fm (4 handlers)
+[GIN-debug] GET    /user/address/            --> voyagear/src/controller.(*AddressController).GetAddresses-fm (4 handlers)
+[GIN-debug] PUT    /user/address/:id         --> voyagear/src/controller.(*AddressController).UpdateAddress-fm (4 handlers)
+[GIN-debug] DELETE /user/address/:id         --> voyagear/src/controller.(*AddressController).DeleteAddress-fm (4 handlers)
+[GIN-debug] POST   /user/payment/create      --> voyagear/src/controller.(*PaymentController).CreatePayment-fm (4 handlers)
+[GIN-debug] POST   /user/payment/verify      --> voyagear/src/controller.(*PaymentController).VerifyPayment-fm (4 handlers)
+[GIN-debug] GET    /user/payment/            --> voyagear/src/controller.(*PaymentController).GetUserPayments-fm (4 handlers)
+[GIN-debug] GET    /user/payment/:id         --> voyagear/src/controller.(*PaymentController).GetUserPaymentByID-fm (4 handlers)
+[GIN-debug] PUT    /user/payment/:id/cancel  --> voyagear/src/controller.(*PaymentController).CancelPayment-fm (4 handlers)
+[GIN-debug] GET    /products                 --> voyagear/src/controller.(*ProductController).GetAllProducts-fm (3 handlers)
+[GIN-debug] GET    /products/search          --> voyagear/src/controller.(*ProductController).SearchProduct-fm (3 handlers)
+[GIN-debug] GET    /product/:id              --> voyagear/src/controller.(*ProductController).GetProductById-fm (3 handlers)
+[GIN-debug] GET    /admin/users              --> voyagear/src/controller.(*AuthController).GetAllUsers-fm (5 handlers)
+[GIN-debug] PUT    /admin/users/:id/block    --> voyagear/src/controller.(*AuthController).ToggleISBlock-fm (5 handlers)
+[GIN-debug] DELETE /admin/users/:id          --> voyagear/src/controller.(*AuthController).DeleteUserById-fm (5 handlers)
+[GIN-debug] POST   /admin/products           --> voyagear/src/controller.(*ProductController).CreateProduct-fm (5 handlers)
+[GIN-debug] PATCH  /admin/products/:id       --> voyagear/src/controller.(*ProductController).UpdateProduct-fm (5 handlers)
+[GIN-debug] DELETE /admin/product/:id        --> voyagear/src/controller.(*ProductController).DeleteProduct-fm (5 handlers)
+[GIN-debug] GET    /admin/orders             --> voyagear/src/controller.(*OrderController).GetAllOrders-fm (5 handlers)
+[GIN-debug] PUT    /admin/orders/:id         --> voyagear/src/controller.(*OrderController).UpdateOrderStatusAdmin-fm (5 handlers)
+[GIN-debug] GET    /admin/payments/:id       --> voyagear/src/controller.(*PaymentController).GetPaymentByIDAdmin-fm (5 handlers)
+[GIN-debug] PUT    /admin/payments/:id/status --> voyagear/src/controller.(*PaymentController).UpdatePaymentStatusAdmin-fm (5 handlers)
+[GIN-debug] [WARNING] You trusted all proxies, this is NOT safe. We recommend you to set a value.
+Please check https://github.com/gin-gonic/gin/blob/master/docs/doc.md#dont-trust-all-proxies for details.
+[GIN-debug] Listening and serving HTTP on :8080
+[GIN] 2026/04/04 - 10:45:34 | 500 |   6.84ms |             ::1 | GET      "/user/wishlist/"
+[36mINFO[0m[2026-04-04 10:47:57] Server Logging Architecture System Actively Initialized 
+[GIN-debug] [WARNING] Creating an Engine instance with the Logger and Recovery middleware already attached.
+
+[GIN-debug] [WARNING] Running in "debug" mode. Switch to "release" mode in production.
+ - using env:	export GIN_MODE=release
+ - using code:	gin.SetMode(gin.ReleaseMode)
+
+[GIN-debug] GET    /                         --> voyagear/src/controller.(*AuthController).Test-fm (3 handlers)
+[GIN-debug] POST   /auth/signup              --> voyagear/src/controller.(*AuthController).Signup-fm (3 handlers)
+[GIN-debug] POST   /auth/login               --> voyagear/src/controller.(*AuthController).Login-fm (3 handlers)
+[GIN-debug] POST   /auth/verify-otp          --> voyagear/src/controller.(*AuthController).VerifyOTP-fm (3 handlers)
+[GIN-debug] POST   /auth/forget-password     --> voyagear/src/controller.(*AuthController).ForgotPassword-fm (3 handlers)
+[GIN-debug] POST   /auth/reset-password      --> voyagear/src/controller.(*AuthController).ResetPassword-fm (3 handlers)
+[GIN-debug] POST   /auth/logout              --> voyagear/src/controller.(*AuthController).Logout-fm (3 handlers)
+[GIN-debug] POST   /refresh                  --> voyagear/src/controller.(*AuthController).RefreshToken-fm (3 handlers)
+[GIN-debug] GET    /user/profile             --> voyagear/src/controller.(*AuthController).GetProfile-fm (4 handlers)
+[GIN-debug] PUT    /user/profile             --> voyagear/src/controller.(*AuthController).UpdateProfile-fm (4 handlers)
+[GIN-debug] POST   /user/cart/               --> voyagear/src/controller.(*CartController).AddToCart-fm (4 handlers)
+[GIN-debug] GET    /user/cart/               --> voyagear/src/controller.(*CartController).GetCart-fm (4 handlers)
+[GIN-debug] PUT    /user/cart/:id            --> voyagear/src/controller.(*CartController).UpdateCartItem-fm (4 handlers)
+[GIN-debug] DELETE /user/cart/:id            --> voyagear/src/controller.(*CartController).RemoveCartItem-fm (4 handlers)
+[GIN-debug] POST   /user/wishlist/           --> voyagear/src/controller.(*WishlistController).AddToWishlist-fm (4 handlers)
+[GIN-debug] GET    /user/wishlist/           --> voyagear/src/controller.(*WishlistController).GetWishlist-fm (4 handlers)
+[GIN-debug] DELETE /user/wishlist/:id        --> voyagear/src/controller.(*WishlistController).RemoveFromWishlist-fm (4 handlers)
+[GIN-debug] GET    /user/order/              --> voyagear/src/controller.(*OrderController).GetUserOrders-fm (4 handlers)
+[GIN-debug] POST   /user/order/              --> voyagear/src/controller.(*OrderController).PlaceOrder-fm (4 handlers)
+[GIN-debug] GET    /user/order/:id           --> voyagear/src/controller.(*OrderController).GetOrderDetails-fm (4 handlers)
+[GIN-debug] PUT    /user/order/:id/cancel    --> voyagear/src/controller.(*OrderController).UpdateOrderStatusUser-fm (4 handlers)
+[GIN-debug] DELETE /user/order/:id           --> voyagear/src/controller.(*OrderController).DeleteOrder-fm (4 handlers)
+[GIN-debug] POST   /user/address/            --> voyagear/src/controller.(*AddressController).CreateAddress-fm (4 handlers)
+[GIN-debug] GET    /user/address/            --> voyagear/src/controller.(*AddressController).GetAddresses-fm (4 handlers)
+[GIN-debug] PUT    /user/address/:id         --> voyagear/src/controller.(*AddressController).UpdateAddress-fm (4 handlers)
+[GIN-debug] DELETE /user/address/:id         --> voyagear/src/controller.(*AddressController).DeleteAddress-fm (4 handlers)
+[GIN-debug] POST   /user/payment/create      --> voyagear/src/controller.(*PaymentController).CreatePayment-fm (4 handlers)
+[GIN-debug] POST   /user/payment/verify      --> voyagear/src/controller.(*PaymentController).VerifyPayment-fm (4 handlers)
+[GIN-debug] GET    /user/payment/            --> voyagear/src/controller.(*PaymentController).GetUserPayments-fm (4 handlers)
+[GIN-debug] GET    /user/payment/:id         --> voyagear/src/controller.(*PaymentController).GetUserPaymentByID-fm (4 handlers)
+[GIN-debug] PUT    /user/payment/:id/cancel  --> voyagear/src/controller.(*PaymentController).CancelPayment-fm (4 handlers)
+[GIN-debug] GET    /products                 --> voyagear/src/controller.(*ProductController).GetAllProducts-fm (3 handlers)
+[GIN-debug] GET    /products/search          --> voyagear/src/controller.(*ProductController).SearchProduct-fm (3 handlers)
+[GIN-debug] GET    /product/:id              --> voyagear/src/controller.(*ProductController).GetProductById-fm (3 handlers)
+[GIN-debug] GET    /admin/users              --> voyagear/src/controller.(*AuthController).GetAllUsers-fm (5 handlers)
+[GIN-debug] PUT    /admin/users/:id/block    --> voyagear/src/controller.(*AuthController).ToggleISBlock-fm (5 handlers)
+[GIN-debug] DELETE /admin/users/:id          --> voyagear/src/controller.(*AuthController).DeleteUserById-fm (5 handlers)
+[GIN-debug] POST   /admin/products           --> voyagear/src/controller.(*ProductController).CreateProduct-fm (5 handlers)
+[GIN-debug] PATCH  /admin/products/:id       --> voyagear/src/controller.(*ProductController).UpdateProduct-fm (5 handlers)
+[GIN-debug] DELETE /admin/product/:id        --> voyagear/src/controller.(*ProductController).DeleteProduct-fm (5 handlers)
+[GIN-debug] GET    /admin/orders             --> voyagear/src/controller.(*OrderController).GetAllOrders-fm (5 handlers)
+[GIN-debug] PUT    /admin/orders/:id         --> voyagear/src/controller.(*OrderController).UpdateOrderStatusAdmin-fm (5 handlers)
+[GIN-debug] GET    /admin/payments/:id       --> voyagear/src/controller.(*PaymentController).GetPaymentByIDAdmin-fm (5 handlers)
+[GIN-debug] PUT    /admin/payments/:id/status --> voyagear/src/controller.(*PaymentController).UpdatePaymentStatusAdmin-fm (5 handlers)
+[GIN-debug] [WARNING] You trusted all proxies, this is NOT safe. We recommend you to set a value.
+Please check https://github.com/gin-gonic/gin/blob/master/docs/doc.md#dont-trust-all-proxies for details.
+[GIN-debug] Listening and serving HTTP on :8080
+[GIN] 2026/04/04 - 10:48:04 | 404 |   1.72ms |             ::1 | GET      "/user/wishlist/"
+[36mINFO[0m[2026-04-04 10:50:22] Server Logging Architecture System Actively Initialized 
+[GIN-debug] [WARNING] Creating an Engine instance with the Logger and Recovery middleware already attached.
+
+[GIN-debug] [WARNING] Running in "debug" mode. Switch to "release" mode in production.
+ - using env:	export GIN_MODE=release
+ - using code:	gin.SetMode(gin.ReleaseMode)
+
+[GIN-debug] GET    /                         --> voyagear/src/controller.(*AuthController).Test-fm (3 handlers)
+[GIN-debug] POST   /auth/signup              --> voyagear/src/controller.(*AuthController).Signup-fm (3 handlers)
+[GIN-debug] POST   /auth/login               --> voyagear/src/controller.(*AuthController).Login-fm (3 handlers)
+[GIN-debug] POST   /auth/verify-otp          --> voyagear/src/controller.(*AuthController).VerifyOTP-fm (3 handlers)
+[GIN-debug] POST   /auth/forget-password     --> voyagear/src/controller.(*AuthController).ForgotPassword-fm (3 handlers)
+[GIN-debug] POST   /auth/reset-password      --> voyagear/src/controller.(*AuthController).ResetPassword-fm (3 handlers)
+[GIN-debug] POST   /auth/logout              --> voyagear/src/controller.(*AuthController).Logout-fm (3 handlers)
+[GIN-debug] POST   /refresh                  --> voyagear/src/controller.(*AuthController).RefreshToken-fm (3 handlers)
+[GIN-debug] GET    /user/profile             --> voyagear/src/controller.(*AuthController).GetProfile-fm (4 handlers)
+[GIN-debug] PUT    /user/profile             --> voyagear/src/controller.(*AuthController).UpdateProfile-fm (4 handlers)
+[GIN-debug] POST   /user/cart/               --> voyagear/src/controller.(*CartController).AddToCart-fm (4 handlers)
+[GIN-debug] GET    /user/cart/               --> voyagear/src/controller.(*CartController).GetCart-fm (4 handlers)
+[GIN-debug] PUT    /user/cart/:id            --> voyagear/src/controller.(*CartController).UpdateCartItem-fm (4 handlers)
+[GIN-debug] DELETE /user/cart/:id            --> voyagear/src/controller.(*CartController).RemoveCartItem-fm (4 handlers)
+[GIN-debug] POST   /user/wishlist/           --> voyagear/src/controller.(*WishlistController).AddToWishlist-fm (4 handlers)
+[GIN-debug] GET    /user/wishlist/           --> voyagear/src/controller.(*WishlistController).GetWishlist-fm (4 handlers)
+[GIN-debug] DELETE /user/wishlist/:id        --> voyagear/src/controller.(*WishlistController).RemoveFromWishlist-fm (4 handlers)
+[GIN-debug] GET    /user/order/              --> voyagear/src/controller.(*OrderController).GetUserOrders-fm (4 handlers)
+[GIN-debug] POST   /user/order/              --> voyagear/src/controller.(*OrderController).PlaceOrder-fm (4 handlers)
+[GIN-debug] GET    /user/order/:id           --> voyagear/src/controller.(*OrderController).GetOrderDetails-fm (4 handlers)
+[GIN-debug] PUT    /user/order/:id/cancel    --> voyagear/src/controller.(*OrderController).UpdateOrderStatusUser-fm (4 handlers)
+[GIN-debug] DELETE /user/order/:id           --> voyagear/src/controller.(*OrderController).DeleteOrder-fm (4 handlers)
+[GIN-debug] POST   /user/address/            --> voyagear/src/controller.(*AddressController).CreateAddress-fm (4 handlers)
+[GIN-debug] GET    /user/address/            --> voyagear/src/controller.(*AddressController).GetAddresses-fm (4 handlers)
+[GIN-debug] PUT    /user/address/:id         --> voyagear/src/controller.(*AddressController).UpdateAddress-fm (4 handlers)
+[GIN-debug] DELETE /user/address/:id         --> voyagear/src/controller.(*AddressController).DeleteAddress-fm (4 handlers)
+[GIN-debug] POST   /user/payment/create      --> voyagear/src/controller.(*PaymentController).CreatePayment-fm (4 handlers)
+[GIN-debug] POST   /user/payment/verify      --> voyagear/src/controller.(*PaymentController).VerifyPayment-fm (4 handlers)
+[GIN-debug] GET    /user/payment/            --> voyagear/src/controller.(*PaymentController).GetUserPayments-fm (4 handlers)
+[GIN-debug] GET    /user/payment/:id         --> voyagear/src/controller.(*PaymentController).GetUserPaymentByID-fm (4 handlers)
+[GIN-debug] PUT    /user/payment/:id/cancel  --> voyagear/src/controller.(*PaymentController).CancelPayment-fm (4 handlers)
+[GIN-debug] GET    /products                 --> voyagear/src/controller.(*ProductController).GetAllProducts-fm (3 handlers)
+[GIN-debug] GET    /products/search          --> voyagear/src/controller.(*ProductController).SearchProduct-fm (3 handlers)
+[GIN-debug] GET    /product/:id              --> voyagear/src/controller.(*ProductController).GetProductById-fm (3 handlers)
+[GIN-debug] GET    /admin/users              --> voyagear/src/controller.(*AuthController).GetAllUsers-fm (5 handlers)
+[GIN-debug] PUT    /admin/users/:id/block    --> voyagear/src/controller.(*AuthController).ToggleISBlock-fm (5 handlers)
+[GIN-debug] DELETE /admin/users/:id          --> voyagear/src/controller.(*AuthController).DeleteUserById-fm (5 handlers)
+[GIN-debug] POST   /admin/products           --> voyagear/src/controller.(*ProductController).CreateProduct-fm (5 handlers)
+[GIN-debug] PATCH  /admin/products/:id       --> voyagear/src/controller.(*ProductController).UpdateProduct-fm (5 handlers)
+[GIN-debug] DELETE /admin/product/:id        --> voyagear/src/controller.(*ProductController).DeleteProduct-fm (5 handlers)
+[GIN-debug] GET    /admin/orders             --> voyagear/src/controller.(*OrderController).GetAllOrders-fm (5 handlers)
+[GIN-debug] PUT    /admin/orders/:id         --> voyagear/src/controller.(*OrderController).UpdateOrderStatusAdmin-fm (5 handlers)
+[GIN-debug] GET    /admin/payments/:id       --> voyagear/src/controller.(*PaymentController).GetPaymentByIDAdmin-fm (5 handlers)
+[GIN-debug] PUT    /admin/payments/:id/status --> voyagear/src/controller.(*PaymentController).UpdatePaymentStatusAdmin-fm (5 handlers)
+[GIN-debug] [WARNING] You trusted all proxies, this is NOT safe. We recommend you to set a value.
+Please check https://github.com/gin-gonic/gin/blob/master/docs/doc.md#dont-trust-all-proxies for details.
+[GIN-debug] Listening and serving HTTP on :8080
+[GIN] 2026/04/04 - 10:50:33 | 401 |       0s |             ::1 | GET      "/user/wishlist/"
+[GIN] 2026/04/04 - 10:51:24 | 404 |   1.99ms |             ::1 | POST     "/refresh"
+[GIN] 2026/04/04 - 11:04:24 | 404 |    1.3ms |             ::1 | POST     "/refresh"
+[36mINFO[0m[2026-04-04 11:06:22] Server Logging Architecture System Actively Initialized 
+[GIN-debug] [WARNING] Creating an Engine instance with the Logger and Recovery middleware already attached.
+
+[GIN-debug] [WARNING] Running in "debug" mode. Switch to "release" mode in production.
+ - using env:	export GIN_MODE=release
+ - using code:	gin.SetMode(gin.ReleaseMode)
+
+[GIN-debug] GET    /                         --> voyagear/src/controller.(*AuthController).Test-fm (3 handlers)
+[GIN-debug] POST   /auth/signup              --> voyagear/src/controller.(*AuthController).Signup-fm (3 handlers)
+[GIN-debug] POST   /auth/login               --> voyagear/src/controller.(*AuthController).Login-fm (3 handlers)
+[GIN-debug] POST   /auth/verify-otp          --> voyagear/src/controller.(*AuthController).VerifyOTP-fm (3 handlers)
+[GIN-debug] POST   /auth/forget-password     --> voyagear/src/controller.(*AuthController).ForgotPassword-fm (3 handlers)
+[GIN-debug] POST   /auth/reset-password      --> voyagear/src/controller.(*AuthController).ResetPassword-fm (3 handlers)
+[GIN-debug] POST   /auth/logout              --> voyagear/src/controller.(*AuthController).Logout-fm (3 handlers)
+[GIN-debug] POST   /refresh                  --> voyagear/src/controller.(*AuthController).RefreshToken-fm (3 handlers)
+[GIN-debug] GET    /user/profile             --> voyagear/src/controller.(*AuthController).GetProfile-fm (4 handlers)
+[GIN-debug] PUT    /user/profile             --> voyagear/src/controller.(*AuthController).UpdateProfile-fm (4 handlers)
+[GIN-debug] POST   /user/cart/               --> voyagear/src/controller.(*CartController).AddToCart-fm (4 handlers)
+[GIN-debug] GET    /user/cart/               --> voyagear/src/controller.(*CartController).GetCart-fm (4 handlers)
+[GIN-debug] PUT    /user/cart/:id            --> voyagear/src/controller.(*CartController).UpdateCartItem-fm (4 handlers)
+[GIN-debug] DELETE /user/cart/:id            --> voyagear/src/controller.(*CartController).RemoveCartItem-fm (4 handlers)
+[GIN-debug] POST   /user/wishlist/           --> voyagear/src/controller.(*WishlistController).AddToWishlist-fm (4 handlers)
+[GIN-debug] GET    /user/wishlist/           --> voyagear/src/controller.(*WishlistController).GetWishlist-fm (4 handlers)
+[GIN-debug] DELETE /user/wishlist/:id        --> voyagear/src/controller.(*WishlistController).RemoveFromWishlist-fm (4 handlers)
+[GIN-debug] GET    /user/order/              --> voyagear/src/controller.(*OrderController).GetUserOrders-fm (4 handlers)
+[GIN-debug] POST   /user/order/              --> voyagear/src/controller.(*OrderController).PlaceOrder-fm (4 handlers)
+[GIN-debug] GET    /user/order/:id           --> voyagear/src/controller.(*OrderController).GetOrderDetails-fm (4 handlers)
+[GIN-debug] PUT    /user/order/:id/cancel    --> voyagear/src/controller.(*OrderController).UpdateOrderStatusUser-fm (4 handlers)
+[GIN-debug] DELETE /user/order/:id           --> voyagear/src/controller.(*OrderController).DeleteOrder-fm (4 handlers)
+[GIN-debug] POST   /user/address/            --> voyagear/src/controller.(*AddressController).CreateAddress-fm (4 handlers)
+[GIN-debug] GET    /user/address/            --> voyagear/src/controller.(*AddressController).GetAddresses-fm (4 handlers)
+[GIN-debug] PUT    /user/address/:id         --> voyagear/src/controller.(*AddressController).UpdateAddress-fm (4 handlers)
+[GIN-debug] DELETE /user/address/:id         --> voyagear/src/controller.(*AddressController).DeleteAddress-fm (4 handlers)
+[GIN-debug] POST   /user/payment/create      --> voyagear/src/controller.(*PaymentController).CreatePayment-fm (4 handlers)
+[GIN-debug] POST   /user/payment/verify      --> voyagear/src/controller.(*PaymentController).VerifyPayment-fm (4 handlers)
+[GIN-debug] GET    /user/payment/            --> voyagear/src/controller.(*PaymentController).GetUserPayments-fm (4 handlers)
+[GIN-debug] GET    /user/payment/:id         --> voyagear/src/controller.(*PaymentController).GetUserPaymentByID-fm (4 handlers)
+[GIN-debug] PUT    /user/payment/:id/cancel  --> voyagear/src/controller.(*PaymentController).CancelPayment-fm (4 handlers)
+[GIN-debug] GET    /products                 --> voyagear/src/controller.(*ProductController).GetAllProducts-fm (3 handlers)
+[GIN-debug] GET    /products/search          --> voyagear/src/controller.(*ProductController).SearchProduct-fm (3 handlers)
+[GIN-debug] GET    /product/:id              --> voyagear/src/controller.(*ProductController).GetProductById-fm (3 handlers)
+[GIN-debug] GET    /admin/users              --> voyagear/src/controller.(*AuthController).GetAllUsers-fm (5 handlers)
+[GIN-debug] PUT    /admin/users/:id/block    --> voyagear/src/controller.(*AuthController).ToggleISBlock-fm (5 handlers)
+[GIN-debug] DELETE /admin/users/:id          --> voyagear/src/controller.(*AuthController).DeleteUserById-fm (5 handlers)
+[GIN-debug] POST   /admin/products           --> voyagear/src/controller.(*ProductController).CreateProduct-fm (5 handlers)
+[GIN-debug] PATCH  /admin/products/:id       --> voyagear/src/controller.(*ProductController).UpdateProduct-fm (5 handlers)
+[GIN-debug] DELETE /admin/product/:id        --> voyagear/src/controller.(*ProductController).DeleteProduct-fm (5 handlers)
+[GIN-debug] GET    /admin/orders             --> voyagear/src/controller.(*OrderController).GetAllOrders-fm (5 handlers)
+[GIN-debug] PUT    /admin/orders/:id         --> voyagear/src/controller.(*OrderController).UpdateOrderStatusAdmin-fm (5 handlers)
+[GIN-debug] GET    /admin/payments/:id       --> voyagear/src/controller.(*PaymentController).GetPaymentByIDAdmin-fm (5 handlers)
+[GIN-debug] PUT    /admin/payments/:id/status --> voyagear/src/controller.(*PaymentController).UpdatePaymentStatusAdmin-fm (5 handlers)
+[GIN-debug] [WARNING] You trusted all proxies, this is NOT safe. We recommend you to set a value.
+Please check https://github.com/gin-gonic/gin/blob/master/docs/doc.md#dont-trust-all-proxies for details.
+[GIN-debug] Listening and serving HTTP on :8080
+[GIN] 2026/04/04 - 11:06:28 | 200 |   4.74ms |             ::1 | POST     "/refresh"
+[36mINFO[0m[2026-04-04 11:07:41] Securely routed memory mapping total block 1 objects natively fetched strictly 
+[GIN] 2026/04/04 - 11:07:41 | 200 |   6.29ms |             ::1 | GET      "/products"
+[36mINFO[0m[2026-04-04 11:17:27] Server Logging Architecture System Actively Initialized 
+[GIN-debug] [WARNING] Creating an Engine instance with the Logger and Recovery middleware already attached.
+
+[GIN-debug] [WARNING] Running in "debug" mode. Switch to "release" mode in production.
+ - using env:	export GIN_MODE=release
+ - using code:	gin.SetMode(gin.ReleaseMode)
+
+[GIN-debug] GET    /                         --> voyagear/src/controller.(*AuthController).Test-fm (3 handlers)
+[GIN-debug] POST   /auth/signup              --> voyagear/src/controller.(*AuthController).Signup-fm (3 handlers)
+[GIN-debug] POST   /auth/login               --> voyagear/src/controller.(*AuthController).Login-fm (3 handlers)
+[GIN-debug] POST   /auth/verify-otp          --> voyagear/src/controller.(*AuthController).VerifyOTP-fm (3 handlers)
+[GIN-debug] POST   /auth/forget-password     --> voyagear/src/controller.(*AuthController).ForgotPassword-fm (3 handlers)
+[GIN-debug] POST   /auth/reset-password      --> voyagear/src/controller.(*AuthController).ResetPassword-fm (3 handlers)
+[GIN-debug] POST   /auth/logout              --> voyagear/src/controller.(*AuthController).Logout-fm (3 handlers)
+[GIN-debug] POST   /refresh                  --> voyagear/src/controller.(*AuthController).RefreshToken-fm (3 handlers)
+[GIN-debug] GET    /user/profile             --> voyagear/src/controller.(*AuthController).GetProfile-fm (4 handlers)
+[GIN-debug] PUT    /user/profile             --> voyagear/src/controller.(*AuthController).UpdateProfile-fm (4 handlers)
+[GIN-debug] POST   /user/cart/               --> voyagear/src/controller.(*CartController).AddToCart-fm (4 handlers)
+[GIN-debug] GET    /user/cart/               --> voyagear/src/controller.(*CartController).GetCart-fm (4 handlers)
+[GIN-debug] PUT    /user/cart/:id            --> voyagear/src/controller.(*CartController).UpdateCartItem-fm (4 handlers)
+[GIN-debug] DELETE /user/cart/:id            --> voyagear/src/controller.(*CartController).RemoveCartItem-fm (4 handlers)
+[GIN-debug] POST   /user/wishlist/           --> voyagear/src/controller.(*WishlistController).AddToWishlist-fm (4 handlers)
+[GIN-debug] GET    /user/wishlist/           --> voyagear/src/controller.(*WishlistController).GetWishlist-fm (4 handlers)
+[GIN-debug] DELETE /user/wishlist/:id        --> voyagear/src/controller.(*WishlistController).RemoveFromWishlist-fm (4 handlers)
+[GIN-debug] GET    /user/order/              --> voyagear/src/controller.(*OrderController).GetUserOrders-fm (4 handlers)
+[GIN-debug] POST   /user/order/              --> voyagear/src/controller.(*OrderController).PlaceOrder-fm (4 handlers)
+[GIN-debug] GET    /user/order/:id           --> voyagear/src/controller.(*OrderController).GetOrderDetails-fm (4 handlers)
+[GIN-debug] PUT    /user/order/:id/cancel    --> voyagear/src/controller.(*OrderController).UpdateOrderStatusUser-fm (4 handlers)
+[GIN-debug] DELETE /user/order/:id           --> voyagear/src/controller.(*OrderController).DeleteOrder-fm (4 handlers)
+[GIN-debug] POST   /user/address/            --> voyagear/src/controller.(*AddressController).CreateAddress-fm (4 handlers)
+[GIN-debug] GET    /user/address/            --> voyagear/src/controller.(*AddressController).GetAddresses-fm (4 handlers)
+[GIN-debug] PUT    /user/address/:id         --> voyagear/src/controller.(*AddressController).UpdateAddress-fm (4 handlers)
+[GIN-debug] DELETE /user/address/:id         --> voyagear/src/controller.(*AddressController).DeleteAddress-fm (4 handlers)
+[GIN-debug] POST   /user/payment/create      --> voyagear/src/controller.(*PaymentController).CreatePayment-fm (4 handlers)
+[GIN-debug] POST   /user/payment/verify      --> voyagear/src/controller.(*PaymentController).VerifyPayment-fm (4 handlers)
+[GIN-debug] GET    /user/payment/            --> voyagear/src/controller.(*PaymentController).GetUserPayments-fm (4 handlers)
+[GIN-debug] GET    /user/payment/:id         --> voyagear/src/controller.(*PaymentController).GetUserPaymentByID-fm (4 handlers)
+[GIN-debug] PUT    /user/payment/:id/cancel  --> voyagear/src/controller.(*PaymentController).CancelPayment-fm (4 handlers)
+[GIN-debug] GET    /products                 --> voyagear/src/controller.(*ProductController).GetAllProducts-fm (3 handlers)
+[GIN-debug] GET    /products/search          --> voyagear/src/controller.(*ProductController).SearchProduct-fm (3 handlers)
+[GIN-debug] GET    /product/:id              --> voyagear/src/controller.(*ProductController).GetProductById-fm (3 handlers)
+[GIN-debug] GET    /admin/users              --> voyagear/src/controller.(*AuthController).GetAllUsers-fm (5 handlers)
+[GIN-debug] PUT    /admin/users/:id/block    --> voyagear/src/controller.(*AuthController).ToggleISBlock-fm (5 handlers)
+[GIN-debug] DELETE /admin/users/:id          --> voyagear/src/controller.(*AuthController).DeleteUserById-fm (5 handlers)
+[GIN-debug] POST   /admin/products           --> voyagear/src/controller.(*ProductController).CreateProduct-fm (5 handlers)
+[GIN-debug] PATCH  /admin/products/:id       --> voyagear/src/controller.(*ProductController).UpdateProduct-fm (5 handlers)
+[GIN-debug] DELETE /admin/product/:id        --> voyagear/src/controller.(*ProductController).DeleteProduct-fm (5 handlers)
+[GIN-debug] GET    /admin/orders             --> voyagear/src/controller.(*OrderController).GetAllOrders-fm (5 handlers)
+[GIN-debug] PUT    /admin/orders/:id         --> voyagear/src/controller.(*OrderController).UpdateOrderStatusAdmin-fm (5 handlers)
+[GIN-debug] GET    /admin/payments/:id       --> voyagear/src/controller.(*PaymentController).GetPaymentByIDAdmin-fm (5 handlers)
+[GIN-debug] PUT    /admin/payments/:id/status --> voyagear/src/controller.(*PaymentController).UpdatePaymentStatusAdmin-fm (5 handlers)
+[GIN-debug] [WARNING] You trusted all proxies, this is NOT safe. We recommend you to set a value.
+Please check https://github.com/gin-gonic/gin/blob/master/docs/doc.md#dont-trust-all-proxies for details.
+[GIN-debug] Listening and serving HTTP on :8080
+[36mINFO[0m[2026-04-04 11:17:49] Securely routed memory mapping total block 1 objects natively fetched strictly 
+[GIN] 2026/04/04 - 11:17:49 | 200 |   3.65ms |             ::1 | GET      "/products"
+[36mINFO[0m[2026-04-04 12:12:13] Server Logging Architecture System Actively Initialized 
+[GIN-debug] [WARNING] Creating an Engine instance with the Logger and Recovery middleware already attached.
+
+[GIN-debug] [WARNING] Running in "debug" mode. Switch to "release" mode in production.
+ - using env:	export GIN_MODE=release
+ - using code:	gin.SetMode(gin.ReleaseMode)
+
+[GIN-debug] GET    /                         --> voyagear/src/controller.(*AuthController).Test-fm (3 handlers)
+[GIN-debug] POST   /auth/signup              --> voyagear/src/controller.(*AuthController).Signup-fm (3 handlers)
+[GIN-debug] POST   /auth/login               --> voyagear/src/controller.(*AuthController).Login-fm (3 handlers)
+[GIN-debug] POST   /auth/verify-otp          --> voyagear/src/controller.(*AuthController).VerifyOTP-fm (3 handlers)
+[GIN-debug] POST   /auth/forget-password     --> voyagear/src/controller.(*AuthController).ForgotPassword-fm (3 handlers)
+[GIN-debug] POST   /auth/reset-password      --> voyagear/src/controller.(*AuthController).ResetPassword-fm (3 handlers)
+[GIN-debug] POST   /auth/logout              --> voyagear/src/controller.(*AuthController).Logout-fm (3 handlers)
+[GIN-debug] POST   /refresh                  --> voyagear/src/controller.(*AuthController).RefreshToken-fm (3 handlers)
+[GIN-debug] GET    /user/profile             --> voyagear/src/controller.(*AuthController).GetProfile-fm (4 handlers)
+[GIN-debug] PUT    /user/profile             --> voyagear/src/controller.(*AuthController).UpdateProfile-fm (4 handlers)
+[GIN-debug] POST   /user/cart/               --> voyagear/src/controller.(*CartController).AddToCart-fm (4 handlers)
+[GIN-debug] GET    /user/cart/               --> voyagear/src/controller.(*CartController).GetCart-fm (4 handlers)
+[GIN-debug] PUT    /user/cart/:id            --> voyagear/src/controller.(*CartController).UpdateCartItem-fm (4 handlers)
+[GIN-debug] DELETE /user/cart/:id            --> voyagear/src/controller.(*CartController).RemoveCartItem-fm (4 handlers)
+[GIN-debug] POST   /user/wishlist/           --> voyagear/src/controller.(*WishlistController).AddToWishlist-fm (4 handlers)
+[GIN-debug] GET    /user/wishlist/           --> voyagear/src/controller.(*WishlistController).GetWishlist-fm (4 handlers)
+[GIN-debug] DELETE /user/wishlist/:id        --> voyagear/src/controller.(*WishlistController).RemoveFromWishlist-fm (4 handlers)
+[GIN-debug] GET    /user/order/              --> voyagear/src/controller.(*OrderController).GetUserOrders-fm (4 handlers)
+[GIN-debug] POST   /user/order/              --> voyagear/src/controller.(*OrderController).PlaceOrder-fm (4 handlers)
+[GIN-debug] GET    /user/order/:id           --> voyagear/src/controller.(*OrderController).GetOrderDetails-fm (4 handlers)
+[GIN-debug] PUT    /user/order/:id/cancel    --> voyagear/src/controller.(*OrderController).UpdateOrderStatusUser-fm (4 handlers)
+[GIN-debug] DELETE /user/order/:id           --> voyagear/src/controller.(*OrderController).DeleteOrder-fm (4 handlers)
+[GIN-debug] POST   /user/address/            --> voyagear/src/controller.(*AddressController).CreateAddress-fm (4 handlers)
+[GIN-debug] GET    /user/address/            --> voyagear/src/controller.(*AddressController).GetAddresses-fm (4 handlers)
+[GIN-debug] PUT    /user/address/:id         --> voyagear/src/controller.(*AddressController).UpdateAddress-fm (4 handlers)
+[GIN-debug] DELETE /user/address/:id         --> voyagear/src/controller.(*AddressController).DeleteAddress-fm (4 handlers)
+[GIN-debug] POST   /user/payment/create      --> voyagear/src/controller.(*PaymentController).CreatePayment-fm (4 handlers)
+[GIN-debug] POST   /user/payment/verify      --> voyagear/src/controller.(*PaymentController).VerifyPayment-fm (4 handlers)
+[GIN-debug] GET    /user/payment/            --> voyagear/src/controller.(*PaymentController).GetUserPayments-fm (4 handlers)
+[GIN-debug] GET    /user/payment/:id         --> voyagear/src/controller.(*PaymentController).GetUserPaymentByID-fm (4 handlers)
+[GIN-debug] PUT    /user/payment/:id/cancel  --> voyagear/src/controller.(*PaymentController).CancelPayment-fm (4 handlers)
+[GIN-debug] GET    /products                 --> voyagear/src/controller.(*ProductController).GetAllProducts-fm (3 handlers)
+[GIN-debug] GET    /products/search          --> voyagear/src/controller.(*ProductController).SearchProduct-fm (3 handlers)
+[GIN-debug] GET    /product/:id              --> voyagear/src/controller.(*ProductController).GetProductById-fm (3 handlers)
+[GIN-debug] GET    /admin/users              --> voyagear/src/controller.(*AuthController).GetAllUsers-fm (5 handlers)
+[GIN-debug] PUT    /admin/users/:id/block    --> voyagear/src/controller.(*AuthController).ToggleISBlock-fm (5 handlers)
+[GIN-debug] DELETE /admin/users/:id          --> voyagear/src/controller.(*AuthController).DeleteUserById-fm (5 handlers)
+[GIN-debug] POST   /admin/products           --> voyagear/src/controller.(*ProductController).CreateProduct-fm (5 handlers)
+[GIN-debug] PATCH  /admin/products/:id       --> voyagear/src/controller.(*ProductController).UpdateProduct-fm (5 handlers)
+[GIN-debug] DELETE /admin/product/:id        --> voyagear/src/controller.(*ProductController).DeleteProduct-fm (5 handlers)
+[GIN-debug] GET    /admin/orders             --> voyagear/src/controller.(*OrderController).GetAllOrders-fm (5 handlers)
+[GIN-debug] PUT    /admin/orders/:id         --> voyagear/src/controller.(*OrderController).UpdateOrderStatusAdmin-fm (5 handlers)
+[GIN-debug] GET    /admin/payments/:id       --> voyagear/src/controller.(*PaymentController).GetPaymentByIDAdmin-fm (5 handlers)
+[GIN-debug] PUT    /admin/payments/:id/status --> voyagear/src/controller.(*PaymentController).UpdatePaymentStatusAdmin-fm (5 handlers)
+[GIN-debug] [WARNING] You trusted all proxies, this is NOT safe. We recommend you to set a value.
+Please check https://github.com/gin-gonic/gin/blob/master/docs/doc.md#dont-trust-all-proxies for details.
+[GIN-debug] Listening and serving HTTP on :8080
+[36mINFO[0m[2026-04-04 12:12:20] Securely routed memory mapping total block 1 objects natively fetched strictly 
+[GIN] 2026/04/04 - 12:12:20 | 200 |   4.81ms |             ::1 | GET      "/products"
+[GIN] 2026/04/04 - 12:13:01 | 401 |   1.58ms |             ::1 | POST     "/refresh"
+[GIN] 2026/04/04 - 12:15:00 | 401 |   1.34ms |             ::1 | POST     "/refresh"
+[36mINFO[0m[2026-04-04 12:16:20] Server Logging Architecture System Actively Initialized 
+[GIN-debug] [WARNING] Creating an Engine instance with the Logger and Recovery middleware already attached.
+
+[GIN-debug] [WARNING] Running in "debug" mode. Switch to "release" mode in production.
+ - using env:	export GIN_MODE=release
+ - using code:	gin.SetMode(gin.ReleaseMode)
+
+[GIN-debug] GET    /                         --> voyagear/src/controller.(*AuthController).Test-fm (3 handlers)
+[GIN-debug] POST   /auth/signup              --> voyagear/src/controller.(*AuthController).Signup-fm (3 handlers)
+[GIN-debug] POST   /auth/login               --> voyagear/src/controller.(*AuthController).Login-fm (3 handlers)
+[GIN-debug] POST   /auth/verify-otp          --> voyagear/src/controller.(*AuthController).VerifyOTP-fm (3 handlers)
+[GIN-debug] POST   /auth/forget-password     --> voyagear/src/controller.(*AuthController).ForgotPassword-fm (3 handlers)
+[GIN-debug] POST   /auth/reset-password      --> voyagear/src/controller.(*AuthController).ResetPassword-fm (3 handlers)
+[GIN-debug] POST   /auth/logout              --> voyagear/src/controller.(*AuthController).Logout-fm (3 handlers)
+[GIN-debug] POST   /refresh                  --> voyagear/src/controller.(*AuthController).RefreshToken-fm (3 handlers)
+[GIN-debug] GET    /user/profile             --> voyagear/src/controller.(*AuthController).GetProfile-fm (4 handlers)
+[GIN-debug] PUT    /user/profile             --> voyagear/src/controller.(*AuthController).UpdateProfile-fm (4 handlers)
+[GIN-debug] POST   /user/cart/               --> voyagear/src/controller.(*CartController).AddToCart-fm (4 handlers)
+[GIN-debug] GET    /user/cart/               --> voyagear/src/controller.(*CartController).GetCart-fm (4 handlers)
+[GIN-debug] PUT    /user/cart/:id            --> voyagear/src/controller.(*CartController).UpdateCartItem-fm (4 handlers)
+[GIN-debug] DELETE /user/cart/:id            --> voyagear/src/controller.(*CartController).RemoveCartItem-fm (4 handlers)
+[GIN-debug] POST   /user/wishlist/           --> voyagear/src/controller.(*WishlistController).AddToWishlist-fm (4 handlers)
+[GIN-debug] GET    /user/wishlist/           --> voyagear/src/controller.(*WishlistController).GetWishlist-fm (4 handlers)
+[GIN-debug] DELETE /user/wishlist/:id        --> voyagear/src/controller.(*WishlistController).RemoveFromWishlist-fm (4 handlers)
+[GIN-debug] GET    /user/order/              --> voyagear/src/controller.(*OrderController).GetUserOrders-fm (4 handlers)
+[GIN-debug] POST   /user/order/              --> voyagear/src/controller.(*OrderController).PlaceOrder-fm (4 handlers)
+[GIN-debug] GET    /user/order/:id           --> voyagear/src/controller.(*OrderController).GetOrderDetails-fm (4 handlers)
+[GIN-debug] PUT    /user/order/:id/cancel    --> voyagear/src/controller.(*OrderController).UpdateOrderStatusUser-fm (4 handlers)
+[GIN-debug] DELETE /user/order/:id           --> voyagear/src/controller.(*OrderController).DeleteOrder-fm (4 handlers)
+[GIN-debug] POST   /user/address/            --> voyagear/src/controller.(*AddressController).CreateAddress-fm (4 handlers)
+[GIN-debug] GET    /user/address/            --> voyagear/src/controller.(*AddressController).GetAddresses-fm (4 handlers)
+[GIN-debug] PUT    /user/address/:id         --> voyagear/src/controller.(*AddressController).UpdateAddress-fm (4 handlers)
+[GIN-debug] DELETE /user/address/:id         --> voyagear/src/controller.(*AddressController).DeleteAddress-fm (4 handlers)
+[GIN-debug] POST   /user/payment/create      --> voyagear/src/controller.(*PaymentController).CreatePayment-fm (4 handlers)
+[GIN-debug] POST   /user/payment/verify      --> voyagear/src/controller.(*PaymentController).VerifyPayment-fm (4 handlers)
+[GIN-debug] GET    /user/payment/            --> voyagear/src/controller.(*PaymentController).GetUserPayments-fm (4 handlers)
+[GIN-debug] GET    /user/payment/:id         --> voyagear/src/controller.(*PaymentController).GetUserPaymentByID-fm (4 handlers)
+[GIN-debug] PUT    /user/payment/:id/cancel  --> voyagear/src/controller.(*PaymentController).CancelPayment-fm (4 handlers)
+[GIN-debug] GET    /products                 --> voyagear/src/controller.(*ProductController).GetAllProducts-fm (3 handlers)
+[GIN-debug] GET    /products/search          --> voyagear/src/controller.(*ProductController).SearchProduct-fm (3 handlers)
+[GIN-debug] GET    /product/:id              --> voyagear/src/controller.(*ProductController).GetProductById-fm (3 handlers)
+[GIN-debug] GET    /admin/users              --> voyagear/src/controller.(*AuthController).GetAllUsers-fm (5 handlers)
+[GIN-debug] PUT    /admin/users/:id/block    --> voyagear/src/controller.(*AuthController).ToggleISBlock-fm (5 handlers)
+[GIN-debug] DELETE /admin/users/:id          --> voyagear/src/controller.(*AuthController).DeleteUserById-fm (5 handlers)
+[GIN-debug] POST   /admin/products           --> voyagear/src/controller.(*ProductController).CreateProduct-fm (5 handlers)
+[GIN-debug] PATCH  /admin/products/:id       --> voyagear/src/controller.(*ProductController).UpdateProduct-fm (5 handlers)
+[GIN-debug] DELETE /admin/product/:id        --> voyagear/src/controller.(*ProductController).DeleteProduct-fm (5 handlers)
+[GIN-debug] GET    /admin/orders             --> voyagear/src/controller.(*OrderController).GetAllOrders-fm (5 handlers)
+[GIN-debug] PUT    /admin/orders/:id         --> voyagear/src/controller.(*OrderController).UpdateOrderStatusAdmin-fm (5 handlers)
+[GIN-debug] GET    /admin/payments/:id       --> voyagear/src/controller.(*PaymentController).GetPaymentByIDAdmin-fm (5 handlers)
+[GIN-debug] PUT    /admin/payments/:id/status --> voyagear/src/controller.(*PaymentController).UpdatePaymentStatusAdmin-fm (5 handlers)
+[GIN-debug] [WARNING] You trusted all proxies, this is NOT safe. We recommend you to set a value.
+Please check https://github.com/gin-gonic/gin/blob/master/docs/doc.md#dont-trust-all-proxies for details.
+[GIN-debug] Listening and serving HTTP on :8080
+[GIN] 2026/04/04 - 12:16:25 | 500 |   3.42ms |             ::1 | POST     "/refresh"
+[36mINFO[0m[2026-04-04 12:18:04] Server Logging Architecture System Actively Initialized 
+[GIN-debug] [WARNING] Creating an Engine instance with the Logger and Recovery middleware already attached.
+
+[GIN-debug] [WARNING] Running in "debug" mode. Switch to "release" mode in production.
+ - using env:	export GIN_MODE=release
+ - using code:	gin.SetMode(gin.ReleaseMode)
+
+[GIN-debug] GET    /                         --> voyagear/src/controller.(*AuthController).Test-fm (3 handlers)
+[GIN-debug] POST   /auth/signup              --> voyagear/src/controller.(*AuthController).Signup-fm (3 handlers)
+[GIN-debug] POST   /auth/login               --> voyagear/src/controller.(*AuthController).Login-fm (3 handlers)
+[GIN-debug] POST   /auth/verify-otp          --> voyagear/src/controller.(*AuthController).VerifyOTP-fm (3 handlers)
+[GIN-debug] POST   /auth/forget-password     --> voyagear/src/controller.(*AuthController).ForgotPassword-fm (3 handlers)
+[GIN-debug] POST   /auth/reset-password      --> voyagear/src/controller.(*AuthController).ResetPassword-fm (3 handlers)
+[GIN-debug] POST   /auth/logout              --> voyagear/src/controller.(*AuthController).Logout-fm (3 handlers)
+[GIN-debug] POST   /refresh                  --> voyagear/src/controller.(*AuthController).RefreshToken-fm (3 handlers)
+[GIN-debug] GET    /user/profile             --> voyagear/src/controller.(*AuthController).GetProfile-fm (4 handlers)
+[GIN-debug] PUT    /user/profile             --> voyagear/src/controller.(*AuthController).UpdateProfile-fm (4 handlers)
+[GIN-debug] POST   /user/cart/               --> voyagear/src/controller.(*CartController).AddToCart-fm (4 handlers)
+[GIN-debug] GET    /user/cart/               --> voyagear/src/controller.(*CartController).GetCart-fm (4 handlers)
+[GIN-debug] PUT    /user/cart/:id            --> voyagear/src/controller.(*CartController).UpdateCartItem-fm (4 handlers)
+[GIN-debug] DELETE /user/cart/:id            --> voyagear/src/controller.(*CartController).RemoveCartItem-fm (4 handlers)
+[GIN-debug] POST   /user/wishlist/           --> voyagear/src/controller.(*WishlistController).AddToWishlist-fm (4 handlers)
+[GIN-debug] GET    /user/wishlist/           --> voyagear/src/controller.(*WishlistController).GetWishlist-fm (4 handlers)
+[GIN-debug] DELETE /user/wishlist/:id        --> voyagear/src/controller.(*WishlistController).RemoveFromWishlist-fm (4 handlers)
+[GIN-debug] GET    /user/order/              --> voyagear/src/controller.(*OrderController).GetUserOrders-fm (4 handlers)
+[GIN-debug] POST   /user/order/              --> voyagear/src/controller.(*OrderController).PlaceOrder-fm (4 handlers)
+[GIN-debug] GET    /user/order/:id           --> voyagear/src/controller.(*OrderController).GetOrderDetails-fm (4 handlers)
+[GIN-debug] PUT    /user/order/:id/cancel    --> voyagear/src/controller.(*OrderController).UpdateOrderStatusUser-fm (4 handlers)
+[GIN-debug] DELETE /user/order/:id           --> voyagear/src/controller.(*OrderController).DeleteOrder-fm (4 handlers)
+[GIN-debug] POST   /user/address/            --> voyagear/src/controller.(*AddressController).CreateAddress-fm (4 handlers)
+[GIN-debug] GET    /user/address/            --> voyagear/src/controller.(*AddressController).GetAddresses-fm (4 handlers)
+[GIN-debug] PUT    /user/address/:id         --> voyagear/src/controller.(*AddressController).UpdateAddress-fm (4 handlers)
+[GIN-debug] DELETE /user/address/:id         --> voyagear/src/controller.(*AddressController).DeleteAddress-fm (4 handlers)
+[GIN-debug] POST   /user/payment/create      --> voyagear/src/controller.(*PaymentController).CreatePayment-fm (4 handlers)
+[GIN-debug] POST   /user/payment/verify      --> voyagear/src/controller.(*PaymentController).VerifyPayment-fm (4 handlers)
+[GIN-debug] GET    /user/payment/            --> voyagear/src/controller.(*PaymentController).GetUserPayments-fm (4 handlers)
+[GIN-debug] GET    /user/payment/:id         --> voyagear/src/controller.(*PaymentController).GetUserPaymentByID-fm (4 handlers)
+[GIN-debug] PUT    /user/payment/:id/cancel  --> voyagear/src/controller.(*PaymentController).CancelPayment-fm (4 handlers)
+[GIN-debug] GET    /products                 --> voyagear/src/controller.(*ProductController).GetAllProducts-fm (3 handlers)
+[GIN-debug] GET    /products/search          --> voyagear/src/controller.(*ProductController).SearchProduct-fm (3 handlers)
+[GIN-debug] GET    /product/:id              --> voyagear/src/controller.(*ProductController).GetProductById-fm (3 handlers)
+[GIN-debug] GET    /admin/users              --> voyagear/src/controller.(*AuthController).GetAllUsers-fm (5 handlers)
+[GIN-debug] PUT    /admin/users/:id/block    --> voyagear/src/controller.(*AuthController).ToggleISBlock-fm (5 handlers)
+[GIN-debug] DELETE /admin/users/:id          --> voyagear/src/controller.(*AuthController).DeleteUserById-fm (5 handlers)
+[GIN-debug] POST   /admin/products           --> voyagear/src/controller.(*ProductController).CreateProduct-fm (5 handlers)
+[GIN-debug] PATCH  /admin/products/:id       --> voyagear/src/controller.(*ProductController).UpdateProduct-fm (5 handlers)
+[GIN-debug] DELETE /admin/product/:id        --> voyagear/src/controller.(*ProductController).DeleteProduct-fm (5 handlers)
+[GIN-debug] GET    /admin/orders             --> voyagear/src/controller.(*OrderController).GetAllOrders-fm (5 handlers)
+[GIN-debug] PUT    /admin/orders/:id         --> voyagear/src/controller.(*OrderController).UpdateOrderStatusAdmin-fm (5 handlers)
+[GIN-debug] GET    /admin/payments/:id       --> voyagear/src/controller.(*PaymentController).GetPaymentByIDAdmin-fm (5 handlers)
+[GIN-debug] PUT    /admin/payments/:id/status --> voyagear/src/controller.(*PaymentController).UpdatePaymentStatusAdmin-fm (5 handlers)
+[GIN-debug] [WARNING] You trusted all proxies, this is NOT safe. We recommend you to set a value.
+Please check https://github.com/gin-gonic/gin/blob/master/docs/doc.md#dont-trust-all-proxies for details.
+[GIN-debug] Listening and serving HTTP on :8080
+[GIN] 2026/04/04 - 12:18:09 | 401 |   2.49ms |             ::1 | POST     "/refresh"
+[36mINFO[0m[2026-04-04 12:19:44] Server Logging Architecture System Actively Initialized 
+[GIN-debug] [WARNING] Creating an Engine instance with the Logger and Recovery middleware already attached.
+
+[GIN-debug] [WARNING] Running in "debug" mode. Switch to "release" mode in production.
+ - using env:	export GIN_MODE=release
+ - using code:	gin.SetMode(gin.ReleaseMode)
+
+[GIN-debug] GET    /                         --> voyagear/src/controller.(*AuthController).Test-fm (3 handlers)
+[GIN-debug] POST   /auth/signup              --> voyagear/src/controller.(*AuthController).Signup-fm (3 handlers)
+[GIN-debug] POST   /auth/login               --> voyagear/src/controller.(*AuthController).Login-fm (3 handlers)
+[GIN-debug] POST   /auth/verify-otp          --> voyagear/src/controller.(*AuthController).VerifyOTP-fm (3 handlers)
+[GIN-debug] POST   /auth/forget-password     --> voyagear/src/controller.(*AuthController).ForgotPassword-fm (3 handlers)
+[GIN-debug] POST   /auth/reset-password      --> voyagear/src/controller.(*AuthController).ResetPassword-fm (3 handlers)
+[GIN-debug] POST   /auth/logout              --> voyagear/src/controller.(*AuthController).Logout-fm (3 handlers)
+[GIN-debug] POST   /refresh                  --> voyagear/src/controller.(*AuthController).RefreshToken-fm (3 handlers)
+[GIN-debug] GET    /user/profile             --> voyagear/src/controller.(*AuthController).GetProfile-fm (4 handlers)
+[GIN-debug] PUT    /user/profile             --> voyagear/src/controller.(*AuthController).UpdateProfile-fm (4 handlers)
+[GIN-debug] POST   /user/cart/               --> voyagear/src/controller.(*CartController).AddToCart-fm (4 handlers)
+[GIN-debug] GET    /user/cart/               --> voyagear/src/controller.(*CartController).GetCart-fm (4 handlers)
+[GIN-debug] PUT    /user/cart/:id            --> voyagear/src/controller.(*CartController).UpdateCartItem-fm (4 handlers)
+[GIN-debug] DELETE /user/cart/:id            --> voyagear/src/controller.(*CartController).RemoveCartItem-fm (4 handlers)
+[GIN-debug] POST   /user/wishlist/           --> voyagear/src/controller.(*WishlistController).AddToWishlist-fm (4 handlers)
+[GIN-debug] GET    /user/wishlist/           --> voyagear/src/controller.(*WishlistController).GetWishlist-fm (4 handlers)
+[GIN-debug] DELETE /user/wishlist/:id        --> voyagear/src/controller.(*WishlistController).RemoveFromWishlist-fm (4 handlers)
+[GIN-debug] GET    /user/order/              --> voyagear/src/controller.(*OrderController).GetUserOrders-fm (4 handlers)
+[GIN-debug] POST   /user/order/              --> voyagear/src/controller.(*OrderController).PlaceOrder-fm (4 handlers)
+[GIN-debug] GET    /user/order/:id           --> voyagear/src/controller.(*OrderController).GetOrderDetails-fm (4 handlers)
+[GIN-debug] PUT    /user/order/:id/cancel    --> voyagear/src/controller.(*OrderController).UpdateOrderStatusUser-fm (4 handlers)
+[GIN-debug] DELETE /user/order/:id           --> voyagear/src/controller.(*OrderController).DeleteOrder-fm (4 handlers)
+[GIN-debug] POST   /user/address/            --> voyagear/src/controller.(*AddressController).CreateAddress-fm (4 handlers)
+[GIN-debug] GET    /user/address/            --> voyagear/src/controller.(*AddressController).GetAddresses-fm (4 handlers)
+[GIN-debug] PUT    /user/address/:id         --> voyagear/src/controller.(*AddressController).UpdateAddress-fm (4 handlers)
+[GIN-debug] DELETE /user/address/:id         --> voyagear/src/controller.(*AddressController).DeleteAddress-fm (4 handlers)
+[GIN-debug] POST   /user/payment/create      --> voyagear/src/controller.(*PaymentController).CreatePayment-fm (4 handlers)
+[GIN-debug] POST   /user/payment/verify      --> voyagear/src/controller.(*PaymentController).VerifyPayment-fm (4 handlers)
+[GIN-debug] GET    /user/payment/            --> voyagear/src/controller.(*PaymentController).GetUserPayments-fm (4 handlers)
+[GIN-debug] GET    /user/payment/:id         --> voyagear/src/controller.(*PaymentController).GetUserPaymentByID-fm (4 handlers)
+[GIN-debug] PUT    /user/payment/:id/cancel  --> voyagear/src/controller.(*PaymentController).CancelPayment-fm (4 handlers)
+[GIN-debug] GET    /products                 --> voyagear/src/controller.(*ProductController).GetAllProducts-fm (3 handlers)
+[GIN-debug] GET    /products/search          --> voyagear/src/controller.(*ProductController).SearchProduct-fm (3 handlers)
+[GIN-debug] GET    /product/:id              --> voyagear/src/controller.(*ProductController).GetProductById-fm (3 handlers)
+[GIN-debug] GET    /admin/users              --> voyagear/src/controller.(*AuthController).GetAllUsers-fm (5 handlers)
+[GIN-debug] PUT    /admin/users/:id/block    --> voyagear/src/controller.(*AuthController).ToggleISBlock-fm (5 handlers)
+[GIN-debug] DELETE /admin/users/:id          --> voyagear/src/controller.(*AuthController).DeleteUserById-fm (5 handlers)
+[GIN-debug] POST   /admin/products           --> voyagear/src/controller.(*ProductController).CreateProduct-fm (5 handlers)
+[GIN-debug] PATCH  /admin/products/:id       --> voyagear/src/controller.(*ProductController).UpdateProduct-fm (5 handlers)
+[GIN-debug] DELETE /admin/product/:id        --> voyagear/src/controller.(*ProductController).DeleteProduct-fm (5 handlers)
+[GIN-debug] GET    /admin/orders             --> voyagear/src/controller.(*OrderController).GetAllOrders-fm (5 handlers)
+[GIN-debug] PUT    /admin/orders/:id         --> voyagear/src/controller.(*OrderController).UpdateOrderStatusAdmin-fm (5 handlers)
+[GIN-debug] GET    /admin/payments/:id       --> voyagear/src/controller.(*PaymentController).GetPaymentByIDAdmin-fm (5 handlers)
+[GIN-debug] PUT    /admin/payments/:id/status --> voyagear/src/controller.(*PaymentController).UpdatePaymentStatusAdmin-fm (5 handlers)
+[GIN-debug] [WARNING] You trusted all proxies, this is NOT safe. We recommend you to set a value.
+Please check https://github.com/gin-gonic/gin/blob/master/docs/doc.md#dont-trust-all-proxies for details.
+[GIN-debug] Listening and serving HTTP on :8080
+[GIN] 2026/04/04 - 12:19:50 | 401 |   1.63ms |             ::1 | POST     "/refresh"
+[GIN] 2026/04/04 - 12:25:54 | 401 |   1.05ms |             ::1 | POST     "/refresh"
+[36mINFO[0m[2026-04-04 12:26:36] User logged in successfully: abdulrahimanmahroof1100@gmail.com 
+[GIN] 2026/04/04 - 12:26:36 | 200 |  56.79ms |             ::1 | POST     "/auth/login"
+[GIN] 2026/04/04 - 12:28:05 | 200 |   2.81ms |             ::1 | POST     "/refresh"
+[36mINFO[0m[2026-04-04 12:28:34] Securely routed memory mapping total block 1 objects natively fetched strictly 
+[GIN] 2026/04/04 - 12:28:34 | 200 |   3.47ms |             ::1 | GET      "/products"
+[GIN-debug] redirecting request 307: /user/wishlist/ --> /user/wishlist/
+[GIN] 2026/04/04 - 12:29:08 | 400 |   2.26ms |             ::1 | POST     "/user/wishlist/"
+[GIN-debug] redirecting request 301: /user/wishlist/ --> /user/wishlist/
+[GIN] 2026/04/04 - 12:29:19 | 404 |   1.15ms |             ::1 | GET      "/user/wishlist/"
+[GIN] 2026/04/04 - 12:29:26 | 404 |       0s |             ::1 | GET      "/user/wishlist/"
+[GIN] 2026/04/04 - 12:31:39 | 404 |       0s |             ::1 | GET      "/user/wishlist/"
+[36mINFO[0m[2026-04-04 12:34:03] Server Logging Architecture System Actively Initialized 
+[GIN-debug] [WARNING] Creating an Engine instance with the Logger and Recovery middleware already attached.
+
+[GIN-debug] [WARNING] Running in "debug" mode. Switch to "release" mode in production.
+ - using env:	export GIN_MODE=release
+ - using code:	gin.SetMode(gin.ReleaseMode)
+
+[GIN-debug] GET    /                         --> voyagear/src/controller.(*AuthController).Test-fm (3 handlers)
+[GIN-debug] POST   /auth/signup              --> voyagear/src/controller.(*AuthController).Signup-fm (3 handlers)
+[GIN-debug] POST   /auth/login               --> voyagear/src/controller.(*AuthController).Login-fm (3 handlers)
+[GIN-debug] POST   /auth/verify-otp          --> voyagear/src/controller.(*AuthController).VerifyOTP-fm (3 handlers)
+[GIN-debug] POST   /auth/forget-password     --> voyagear/src/controller.(*AuthController).ForgotPassword-fm (3 handlers)
+[GIN-debug] POST   /auth/reset-password      --> voyagear/src/controller.(*AuthController).ResetPassword-fm (3 handlers)
+[GIN-debug] POST   /auth/logout              --> voyagear/src/controller.(*AuthController).Logout-fm (3 handlers)
+[GIN-debug] POST   /refresh                  --> voyagear/src/controller.(*AuthController).RefreshToken-fm (3 handlers)
+[GIN-debug] GET    /user/profile             --> voyagear/src/controller.(*AuthController).GetProfile-fm (4 handlers)
+[GIN-debug] PUT    /user/profile             --> voyagear/src/controller.(*AuthController).UpdateProfile-fm (4 handlers)
+[GIN-debug] POST   /user/cart/               --> voyagear/src/controller.(*CartController).AddToCart-fm (4 handlers)
+[GIN-debug] GET    /user/cart/               --> voyagear/src/controller.(*CartController).GetCart-fm (4 handlers)
+[GIN-debug] PUT    /user/cart/:id            --> voyagear/src/controller.(*CartController).UpdateCartItem-fm (4 handlers)
+[GIN-debug] DELETE /user/cart/:id            --> voyagear/src/controller.(*CartController).RemoveCartItem-fm (4 handlers)
+[GIN-debug] POST   /user/wishlist/           --> voyagear/src/controller.(*WishlistController).AddToWishlist-fm (4 handlers)
+[GIN-debug] GET    /user/wishlist/           --> voyagear/src/controller.(*WishlistController).GetWishlist-fm (4 handlers)
+[GIN-debug] DELETE /user/wishlist/:id        --> voyagear/src/controller.(*WishlistController).RemoveFromWishlist-fm (4 handlers)
+[GIN-debug] GET    /user/order/              --> voyagear/src/controller.(*OrderController).GetUserOrders-fm (4 handlers)
+[GIN-debug] POST   /user/order/              --> voyagear/src/controller.(*OrderController).PlaceOrder-fm (4 handlers)
+[GIN-debug] GET    /user/order/:id           --> voyagear/src/controller.(*OrderController).GetOrderDetails-fm (4 handlers)
+[GIN-debug] PUT    /user/order/:id/cancel    --> voyagear/src/controller.(*OrderController).UpdateOrderStatusUser-fm (4 handlers)
+[GIN-debug] DELETE /user/order/:id           --> voyagear/src/controller.(*OrderController).DeleteOrder-fm (4 handlers)
+[GIN-debug] POST   /user/address/            --> voyagear/src/controller.(*AddressController).CreateAddress-fm (4 handlers)
+[GIN-debug] GET    /user/address/            --> voyagear/src/controller.(*AddressController).GetAddresses-fm (4 handlers)
+[GIN-debug] PUT    /user/address/:id         --> voyagear/src/controller.(*AddressController).UpdateAddress-fm (4 handlers)
+[GIN-debug] DELETE /user/address/:id         --> voyagear/src/controller.(*AddressController).DeleteAddress-fm (4 handlers)
+[GIN-debug] POST   /user/payment/create      --> voyagear/src/controller.(*PaymentController).CreatePayment-fm (4 handlers)
+[GIN-debug] POST   /user/payment/verify      --> voyagear/src/controller.(*PaymentController).VerifyPayment-fm (4 handlers)
+[GIN-debug] GET    /user/payment/            --> voyagear/src/controller.(*PaymentController).GetUserPayments-fm (4 handlers)
+[GIN-debug] GET    /user/payment/:id         --> voyagear/src/controller.(*PaymentController).GetUserPaymentByID-fm (4 handlers)
+[GIN-debug] PUT    /user/payment/:id/cancel  --> voyagear/src/controller.(*PaymentController).CancelPayment-fm (4 handlers)
+[GIN-debug] GET    /products                 --> voyagear/src/controller.(*ProductController).GetAllProducts-fm (3 handlers)
+[GIN-debug] GET    /products/search          --> voyagear/src/controller.(*ProductController).SearchProduct-fm (3 handlers)
+[GIN-debug] GET    /product/:id              --> voyagear/src/controller.(*ProductController).GetProductById-fm (3 handlers)
+[GIN-debug] GET    /admin/users              --> voyagear/src/controller.(*AuthController).GetAllUsers-fm (5 handlers)
+[GIN-debug] PUT    /admin/users/:id/block    --> voyagear/src/controller.(*AuthController).ToggleISBlock-fm (5 handlers)
+[GIN-debug] DELETE /admin/users/:id          --> voyagear/src/controller.(*AuthController).DeleteUserById-fm (5 handlers)
+[GIN-debug] POST   /admin/products           --> voyagear/src/controller.(*ProductController).CreateProduct-fm (5 handlers)
+[GIN-debug] PATCH  /admin/products/:id       --> voyagear/src/controller.(*ProductController).UpdateProduct-fm (5 handlers)
+[GIN-debug] DELETE /admin/product/:id        --> voyagear/src/controller.(*ProductController).DeleteProduct-fm (5 handlers)
+[GIN-debug] GET    /admin/orders             --> voyagear/src/controller.(*OrderController).GetAllOrders-fm (5 handlers)
+[GIN-debug] PUT    /admin/orders/:id         --> voyagear/src/controller.(*OrderController).UpdateOrderStatusAdmin-fm (5 handlers)
+[GIN-debug] GET    /admin/payments/:id       --> voyagear/src/controller.(*PaymentController).GetPaymentByIDAdmin-fm (5 handlers)
+[GIN-debug] PUT    /admin/payments/:id/status --> voyagear/src/controller.(*PaymentController).UpdatePaymentStatusAdmin-fm (5 handlers)
+[GIN-debug] [WARNING] You trusted all proxies, this is NOT safe. We recommend you to set a value.
+Please check https://github.com/gin-gonic/gin/blob/master/docs/doc.md#dont-trust-all-proxies for details.
+[GIN-debug] Listening and serving HTTP on :8080
+[36mINFO[0m[2026-04-04 12:34:13] Wishlist memory extracted physically for User c9b9e434-786b-4852-a891-b977753dc39a successfully 
+[GIN] 2026/04/04 - 12:34:13 | 200 |   2.17ms |             ::1 | GET      "/user/wishlist/"
+[31mERRO[0m[2026-04-04 12:34:48] Database parameters completely halted fetching core catalog array structurally: ERROR: column "user_id" does not exist (SQLSTATE 42703) 
+[GIN] 2026/04/04 - 12:34:48 | 500 |   1.31ms |             ::1 | GET      "/products"
+[36mINFO[0m[2026-04-04 12:42:56] Server Logging Architecture System Actively Initialized 
+[GIN-debug] [WARNING] Creating an Engine instance with the Logger and Recovery middleware already attached.
+
+[GIN-debug] [WARNING] Running in "debug" mode. Switch to "release" mode in production.
+ - using env:	export GIN_MODE=release
+ - using code:	gin.SetMode(gin.ReleaseMode)
+
+[GIN-debug] GET    /                         --> voyagear/src/controller.(*AuthController).Test-fm (3 handlers)
+[GIN-debug] POST   /auth/signup              --> voyagear/src/controller.(*AuthController).Signup-fm (3 handlers)
+[GIN-debug] POST   /auth/login               --> voyagear/src/controller.(*AuthController).Login-fm (3 handlers)
+[GIN-debug] POST   /auth/verify-otp          --> voyagear/src/controller.(*AuthController).VerifyOTP-fm (3 handlers)
+[GIN-debug] POST   /auth/forget-password     --> voyagear/src/controller.(*AuthController).ForgotPassword-fm (3 handlers)
+[GIN-debug] POST   /auth/reset-password      --> voyagear/src/controller.(*AuthController).ResetPassword-fm (3 handlers)
+[GIN-debug] POST   /auth/logout              --> voyagear/src/controller.(*AuthController).Logout-fm (3 handlers)
+[GIN-debug] POST   /refresh                  --> voyagear/src/controller.(*AuthController).RefreshToken-fm (3 handlers)
+[GIN-debug] GET    /user/profile             --> voyagear/src/controller.(*AuthController).GetProfile-fm (4 handlers)
+[GIN-debug] PUT    /user/profile             --> voyagear/src/controller.(*AuthController).UpdateProfile-fm (4 handlers)
+[GIN-debug] POST   /user/cart/               --> voyagear/src/controller.(*CartController).AddToCart-fm (4 handlers)
+[GIN-debug] GET    /user/cart/               --> voyagear/src/controller.(*CartController).GetCart-fm (4 handlers)
+[GIN-debug] PUT    /user/cart/:id            --> voyagear/src/controller.(*CartController).UpdateCartItem-fm (4 handlers)
+[GIN-debug] DELETE /user/cart/:id            --> voyagear/src/controller.(*CartController).RemoveCartItem-fm (4 handlers)
+[GIN-debug] POST   /user/wishlist/           --> voyagear/src/controller.(*WishlistController).AddToWishlist-fm (4 handlers)
+[GIN-debug] GET    /user/wishlist/           --> voyagear/src/controller.(*WishlistController).GetWishlist-fm (4 handlers)
+[GIN-debug] DELETE /user/wishlist/:id        --> voyagear/src/controller.(*WishlistController).RemoveFromWishlist-fm (4 handlers)
+[GIN-debug] GET    /user/order/              --> voyagear/src/controller.(*OrderController).GetUserOrders-fm (4 handlers)
+[GIN-debug] POST   /user/order/              --> voyagear/src/controller.(*OrderController).PlaceOrder-fm (4 handlers)
+[GIN-debug] GET    /user/order/:id           --> voyagear/src/controller.(*OrderController).GetOrderDetails-fm (4 handlers)
+[GIN-debug] PUT    /user/order/:id/cancel    --> voyagear/src/controller.(*OrderController).UpdateOrderStatusUser-fm (4 handlers)
+[GIN-debug] DELETE /user/order/:id           --> voyagear/src/controller.(*OrderController).DeleteOrder-fm (4 handlers)
+[GIN-debug] POST   /user/address/            --> voyagear/src/controller.(*AddressController).CreateAddress-fm (4 handlers)
+[GIN-debug] GET    /user/address/            --> voyagear/src/controller.(*AddressController).GetAddresses-fm (4 handlers)
+[GIN-debug] PUT    /user/address/:id         --> voyagear/src/controller.(*AddressController).UpdateAddress-fm (4 handlers)
+[GIN-debug] DELETE /user/address/:id         --> voyagear/src/controller.(*AddressController).DeleteAddress-fm (4 handlers)
+[GIN-debug] POST   /user/payment/create      --> voyagear/src/controller.(*PaymentController).CreatePayment-fm (4 handlers)
+[GIN-debug] POST   /user/payment/verify      --> voyagear/src/controller.(*PaymentController).VerifyPayment-fm (4 handlers)
+[GIN-debug] GET    /user/payment/            --> voyagear/src/controller.(*PaymentController).GetUserPayments-fm (4 handlers)
+[GIN-debug] GET    /user/payment/:id         --> voyagear/src/controller.(*PaymentController).GetUserPaymentByID-fm (4 handlers)
+[GIN-debug] PUT    /user/payment/:id/cancel  --> voyagear/src/controller.(*PaymentController).CancelPayment-fm (4 handlers)
+[GIN-debug] GET    /products                 --> voyagear/src/controller.(*ProductController).GetAllProducts-fm (3 handlers)
+[GIN-debug] GET    /products/search          --> voyagear/src/controller.(*ProductController).SearchProduct-fm (3 handlers)
+[GIN-debug] GET    /product/:id              --> voyagear/src/controller.(*ProductController).GetProductById-fm (3 handlers)
+[GIN-debug] GET    /admin/users              --> voyagear/src/controller.(*AuthController).GetAllUsers-fm (5 handlers)
+[GIN-debug] PUT    /admin/users/:id/block    --> voyagear/src/controller.(*AuthController).ToggleISBlock-fm (5 handlers)
+[GIN-debug] DELETE /admin/users/:id          --> voyagear/src/controller.(*AuthController).DeleteUserById-fm (5 handlers)
+[GIN-debug] POST   /admin/products           --> voyagear/src/controller.(*ProductController).CreateProduct-fm (5 handlers)
+[GIN-debug] PATCH  /admin/products/:id       --> voyagear/src/controller.(*ProductController).UpdateProduct-fm (5 handlers)
+[GIN-debug] DELETE /admin/product/:id        --> voyagear/src/controller.(*ProductController).DeleteProduct-fm (5 handlers)
+[GIN-debug] GET    /admin/orders             --> voyagear/src/controller.(*OrderController).GetAllOrders-fm (5 handlers)
+[GIN-debug] PUT    /admin/orders/:id         --> voyagear/src/controller.(*OrderController).UpdateOrderStatusAdmin-fm (5 handlers)
+[GIN-debug] GET    /admin/payments/:id       --> voyagear/src/controller.(*PaymentController).GetPaymentByIDAdmin-fm (5 handlers)
+[GIN-debug] PUT    /admin/payments/:id/status --> voyagear/src/controller.(*PaymentController).UpdatePaymentStatusAdmin-fm (5 handlers)
+[GIN-debug] [WARNING] You trusted all proxies, this is NOT safe. We recommend you to set a value.
+Please check https://github.com/gin-gonic/gin/blob/master/docs/doc.md#dont-trust-all-proxies for details.
+[GIN-debug] Listening and serving HTTP on :8080
+[GIN] 2026/04/04 - 12:43:10 | 401 |   1.88ms |             ::1 | POST     "/refresh"
+[GIN] 2026/04/04 - 12:46:36 | 401 |   1.16ms |             ::1 | POST     "/refresh"
+[36mINFO[0m[2026-04-04 12:47:47] User logged in successfully: abdulrahimanmahroof1100@gmail.com 
+[GIN] 2026/04/04 - 12:47:47 | 200 |  55.17ms |             ::1 | POST     "/auth/login"
+[GIN] 2026/04/04 - 12:48:34 | 200 |   1.92ms |             ::1 | POST     "/refresh"
+[GIN] 2026/04/04 - 12:50:04 | 401 |   1.52ms |             ::1 | POST     "/refresh"
+[GIN] 2026/04/04 - 12:50:13 | 401 |  617.1µs |             ::1 | POST     "/refresh"
+[GIN] 2026/04/04 - 12:50:25 | 401 |  534.1µs |             ::1 | POST     "/refresh"
+[GIN] 2026/04/04 - 12:50:29 | 401 |  510.3µs |             ::1 | POST     "/refresh"

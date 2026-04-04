@@ -9,7 +9,7 @@ import (
 )
 
 // Hashing string using bcrypt algorithm (mainly for passwords) - max length 72 bit
-func HashPassword (password string) (string, error) {
+func HashPassword(password string) (string, error) {
 	hash, err := bcrypt.GenerateFromPassword(
 		[]byte(password),
 		bcrypt.DefaultCost,
@@ -19,7 +19,7 @@ func HashPassword (password string) (string, error) {
 }
 
 // Comparing stored hash and password from request using bcrypt algorithm
-func CheckPassword (password, hash string) bool {
+func CheckPassword(password, hash string) bool {
 	err := bcrypt.CompareHashAndPassword(
 		[]byte(hash),
 		[]byte(password),
@@ -29,12 +29,12 @@ func CheckPassword (password, hash string) bool {
 }
 
 // Token hashing using SHA256 algorithm
-func HashToken (token string) string {
+func HashToken(token string) string {
 	hashToken := sha256.Sum256([]byte(token))
 	return hex.EncodeToString(hashToken[:])
 }
 
-func CompareTokens (token string, storedHash string) bool {
+func CompareTokens(token string, storedHash string) bool {
 	hash := HashToken(token)
 
 	// It compares all byte. prevent timing attacks

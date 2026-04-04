@@ -9,7 +9,8 @@ import (
 
 type UserAddress struct {
 	ID        uuid.UUID `gorm:"type:uuid;primaryKey" json:"id"`
-	UserID    string    `gorm:"type:uuid" json:"user_id" validate:"required"` 
+	UserID    uuid.UUID `gorm:"type:uuid" json:"user_id" validate:"required"` 
+	User      User      `gorm:"foreignKey:UserID"`
 	Line1     string	`json:"line_1"`
 	Line2     string	`json:"line_2"`
 	City      string	`json:"city" validate:"required"`

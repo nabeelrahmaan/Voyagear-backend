@@ -13,13 +13,13 @@ type WishlistService struct {
 	Repo repository.PgSQLRepository
 }
 
-func SetupWishlist (repo repository.PgSQLRepository) *WishlistService {
+func SetupWishlist(repo repository.PgSQLRepository) *WishlistService {
 	return &WishlistService{
 		Repo: repo,
 	}
 }
 
-func (w *WishlistService) GetWishlist (userID string) (*models.Wishlist, error) {
+func (w *WishlistService) GetWishlist(userID string) (*models.Wishlist, error) {
 	uid, err := uuid.Parse(userID)
 	if err != nil {
 		return nil, apperror.New(
@@ -31,10 +31,9 @@ func (w *WishlistService) GetWishlist (userID string) (*models.Wishlist, error) 
 
 	var wishlist models.Wishlist
 
-	args := []interface{}{}
-	args = append(args, uid)
+	args := []interface{}{uid}
 
-	if err := w.Repo.FindWhereWithPreload(wishlist, "user_id = ?", args, "WishlistItem"); err != nil {
+	if err := w.Repo.FindWhereWithPreload(&wishlist, "user_id = ?", args, "Items"); err != nil {
 		return nil, apperror.New(
 			constant.NOTFOUND,
 			"Wishlist not found",
@@ -45,7 +44,7 @@ func (w *WishlistService) GetWishlist (userID string) (*models.Wishlist, error) 
 	return &wishlist, nil
 }
 
-func (w *WishlistService) AddToWishlist (userID, productID string) error {
+func (w *WishlistService) AddToWishlist(userID, productID string) error {
 
 	uID, err := uuid.Parse(userID)
 	if err != nil {
@@ -95,7 +94,7 @@ func (w *WishlistService) AddToWishlist (userID, productID string) error {
 
 	item := models.WishlistItem{
 		WishlistID: wishlist.ID,
-		ProductID: pID,
+		ProductID:  pID,
 	}
 
 	if err := w.Repo.Insert(&item); err != nil {
@@ -105,11 +104,11 @@ func (w *WishlistService) AddToWishlist (userID, productID string) error {
 			err,
 		)
 	}
-	
+
 	return nil
 }
 
-func (w *WishlistService) RemoveFromWishlist (userID, productID string) error {
+func (w *WishlistService) RemoveFromWishlist(userID, productID string) error {
 
 	uID, err := uuid.Parse(userID)
 	if err != nil {
@@ -146,7 +145,7 @@ func (w *WishlistService) RemoveFromWishlist (userID, productID string) error {
 			err,
 		)
 	}
-	
+
 	err = w.Repo.DeleteOneWhere(&models.WishlistItem{}, "user_id = ? AND product_id = ?", uID, pID)
 	if err != nil {
 		return apperror.New(

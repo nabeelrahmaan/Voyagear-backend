@@ -21,7 +21,7 @@ func SetupProductService(repo repository.PgSQLRepository) *ProductService {
 
 // Input structs
 type UpdateProductVarientsInput struct {
-	ID       *string
+	ID       string
 	Size     string
 	Quantity int
 }
@@ -34,7 +34,7 @@ type UpdateProductInput struct {
 	ImageURL      *string
 	Category      *string
 	IsActive      *bool
-	Variant         *[]UpdateProductVarientsInput
+	Variant       *[]UpdateProductVarientsInput
 }
 
 func (s *ProductService) CreateProduct(product *models.Product) error {
@@ -57,26 +57,146 @@ func (s *ProductService) CreateProduct(product *models.Product) error {
 	return nil
 }
 
-func (s *ProductService) GetAllProducts(filter repository.ProductFilter,
+func (s *ProductService) GetAllProducts(
+	filter repository.ProductFilter,
 	page, pageSize int,
 	sortBy, sortOrder string,
-) ([]models.Product, int64, error) {
+	userID string,
+) ([]models.ProductResponse, int64, error) {
 
-	if page <= 0 {
-		page = 1
+	var productResponses []models.ProductResponse
+	var totalCount int64
+
+	query := s.Repo.GetDB().Table("products p")
+
+	if userID != "" {
+		uID, err := uuid.Parse(userID)
+		if err != nil {
+			return nil, 0, apperror.New(constant.BADREQUEST, "Invalid user id", err)
+		}
+		query = query.Select(`
+			p.id, p.name, p.description, p.price, p.category,
+			p.image_url, p.original_price, p.is_active, p.created_at, p.updated_at,
+			EXISTS (
+				SELECT 1 FROM wishlist_items wi
+				INNER JOIN wishlists w ON w.id = wi.wishlist_id
+				WHERE wi.product_id = p.id
+				AND w.user_id = ?
+			) as is_wishlisted
+		`, uID)
+	} else {
+		query = query.Select(`
+			p.id, p.name, p.description, p.price, p.category,
+			p.image_url, p.original_price, p.is_active, p.created_at, p.updated_at,
+			false as is_wishlisted
+		`)
 	}
 
-	if pageSize <= 0 {
-		pageSize = 10
+	// Apply filters
+	if filter.Search != "" {
+		search := "%" + filter.Search + "%"
+		query = query.Where("(p.name ILIKE ? OR p.description ILIKE ?)", search, search)
+	}
+	if filter.Category != "" {
+		query = query.Where("p.category = ?", filter.Category)
+	}
+	if filter.MinPrice > 0 {
+		query = query.Where("p.price >= ?", filter.MinPrice)
+	}
+	if filter.MaxPrice > 0 {
+		query = query.Where("p.price <= ?", filter.MaxPrice)
+	}
+	if filter.Size != "" {
+		query = query.
+			Joins("JOIN variants v ON v.product_id = p.id").
+			Where("v.size = ?", filter.Size)
 	}
 
-	return s.Repo.GetAllProducts(repository.ProductFilter(filter), page, pageSize, sortBy, sortOrder)
+	// Count query
+	countQuery := s.Repo.GetDB().Table("products p").
+		Select("COUNT(DISTINCT p.id)")
+
+	if filter.Search != "" {
+		search := "%" + filter.Search + "%"
+		countQuery = countQuery.Where("(p.name ILIKE ? OR p.description ILIKE ?)", search, search)
+	}
+	if filter.Category != "" {
+		countQuery = countQuery.Where("p.category = ?", filter.Category)
+	}
+	if filter.MinPrice > 0 {
+		countQuery = countQuery.Where("p.price >= ?", filter.MinPrice)
+	}
+	if filter.MaxPrice > 0 {
+		countQuery = countQuery.Where("p.price <= ?", filter.MaxPrice)
+	}
+	if filter.Size != "" {
+		countQuery = countQuery.
+			Joins("JOIN variants v ON v.product_id = p.id").
+			Where("v.size = ?", filter.Size)
+	}
+
+	if err := countQuery.Scan(&totalCount).Error; err != nil {
+		return nil, 0, err
+	}
+
+	// Sorting
+	sortCol := "p.created_at"
+	switch sortBy {
+	case "name":
+		sortCol = "p.name"
+	case "price":
+		sortCol = "p.price"
+	}
+	if sortOrder != "asc" && sortOrder != "desc" {
+		sortOrder = "asc"
+	}
+
+	offset := (page - 1) * pageSize
+
+	err := query.
+		Group("p.id").
+		Order(sortCol + " " + sortOrder).
+		Limit(pageSize).
+		Offset(offset).
+		Find(&productResponses).Error
+
+	if err != nil {
+		return nil, 0, err
+	}
+
+	// Load variants
+	if len(productResponses) > 0 {
+		productIDs := make([]uuid.UUID, len(productResponses))
+		for i, p := range productResponses {
+			productIDs[i] = p.ID
+		}
+
+		var variants []models.Variant
+		err = s.Repo.GetDB().Where("product_id IN ?", productIDs).Find(&variants).Error
+		if err == nil {
+			variantMap := make(map[uuid.UUID][]models.VariantResponse)
+			for _, v := range variants {
+				variantMap[v.ProductID] = append(variantMap[v.ProductID], models.VariantResponse{
+					ID:        v.ID,
+					Size:      v.Size,
+					Quantity:  v.Quantity,
+					CreatedAt: v.CreatedAt,
+					UpdatedAt: v.UpdatedAt,
+				})
+			}
+			for i := range productResponses {
+				productResponses[i].Variants = variantMap[productResponses[i].ID]
+			}
+		}
+	}
+
+	return productResponses, totalCount, nil
 }
 
 func (s *ProductService) GetProductById(productID string) (*models.Product, error) {
 
 	var product models.Product
-	if err := s.Repo.FindByIDWithPreload(&product, productID, "Variant"); err != nil {
+	if err := s.Repo.FindByIDWithPreload(&product, productID, "Variants"); err != nil {
 		return nil, apperror.New(
 			constant.NOTFOUND,
 			"Product not found",
@@ -113,7 +233,7 @@ func (s *ProductService) DeleteProduct(productID string) error {
 func (s *ProductService) UpdateProduct(productID string, input *UpdateProductInput) (*models.Product, error) {
 
 	var product models.Product
-	if err := s.Repo.FindByIDWithPreload(&product, productID, "Variant"); err != nil {
+	if err := s.Repo.FindByIDWithPreload(&product, productID, "Variants"); err != nil {
 		return nil, apperror.New(
 			constant.NOTFOUND,
 			"Product not found",
@@ -158,13 +278,22 @@ func (s *ProductService) UpdateProduct(productID string, input *UpdateProductInp
 
 	if input.Variant != nil {
 		for _, pv := range *input.Variant {
-			if pv.ID != nil {
+			if pv.ID != "" {
 				updates := map[string]interface{}{
-					"size":pv.Size,
-					"quantity":pv.Quantity,
+					"size":     pv.Size,
+					"quantity": pv.Quantity,
 				}
 
-				if err := s.Repo.UpdateByFields(&models.Variant{}, productID, updates); err != nil {
+				pvID, err := uuid.Parse(pv.ID)
+				if err != nil {
+					return nil, apperror.New(
+						constant.BADREQUEST,
+						"Invalid variant ID",
+						err,
+					)
+				}
+
+				if err := s.Repo.UpdateByFields(&models.Variant{}, pvID, updates); err != nil {
 					return nil, apperror.New(
 						constant.INTERNALSERVERERROR,
 						"Failed to update variant",
@@ -177,8 +306,8 @@ func (s *ProductService) UpdateProduct(productID string, input *UpdateProductInp
 
 			prodVariant := models.Variant{
 				ProductID: uuid.MustParse(productID),
-				Size: pv.Size,
-				Quantity: pv.Quantity,
+				Size:      pv.Size,
+				Quantity:  pv.Quantity,
 			}
 
 			if err := s.Repo.Insert(&prodVariant); err != nil {

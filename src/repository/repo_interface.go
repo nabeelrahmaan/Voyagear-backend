@@ -1,7 +1,6 @@
 package repository
 
 import (
-	"voyagear/src/models"
 	"gorm.io/gorm"
 )
 
@@ -23,7 +22,7 @@ type PgSQLRepository interface {
 	FindByIDWithPreload(obj interface{}, id interface{}, prealoads ...string) error
 	FindWhereWithPreload(obj interface{}, query string, args []interface{}, preloads ...string) error
 	FindAllWithPreload(obj interface{}, preloads ...string) error
-	GetAllProducts(filter ProductFilter, page, pageSize int, sortBy, sortOrder string) ([]models.Product, int64, error)
+	GetDB() *gorm.DB
 	Raw(sql string, values ...interface{}) error
 	Save(req interface{}) error
 	Begin() *gorm.DB

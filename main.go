@@ -13,6 +13,9 @@ import (
 	"voyagear/src/services"
 	"voyagear/utils/email"
 	"voyagear/utils/jwt"
+	"voyagear/utils/logger"
+	"voyagear/utils/razorpay"
+	"voyagear/utils/validation"
 
 	"github.com/gin-gonic/gin"
 )
@@ -25,9 +28,16 @@ func main() {
 		return
 	}
 
-	db := database.SetupDatbase(cfg)
+	db := database.SetupDatabase(cfg)
 
 	migration.Migrate(db)
+
+	// Bind generic structured JSON parsers to use the custom validation templates unconditionally
+	validation.InitValidation()
+
+	// Intercept boot sequence to spin up explicit logrus formatting and directories natively
+	appLogger := logger.InitLogger()
+	gin.DefaultWriter = appLogger.Out
 
 	r := gin.Default()
 
@@ -51,15 +61,36 @@ func main() {
 	productService := services.SetupProductService(repo)
 	productController := controller.SetupProductController(productService)
 
-	
+	cartService := services.SetupCart(repo)
+	cartController := controller.SetupCartController(cartService)
 
-		routes.SetupRoutes(
-			r,
-			authController,
-			productController,
-			jwtManager,
-			repo,
-		)
-	
-		r.Run(":" + cfg.Server.Port)
+	addressService := services.SetupAddressService(repo)
+	addressController := controller.SetupAddressController(addressService)
+
+	wishlistService := services.SetupWishlist(repo)
+	wishlistController := controller.SetupWishlistController(wishlistService)
+
+	// Initialize Gateway Settings
+	rzpClient := razorpay.NewRazorpayClient(&cfg.Razorpay)
+
+	orderService := services.SetupOrderService(repo, rzpClient)
+	orderController := controller.SetupOrderController(orderService)
+
+	paymentService := services.SetupPaymentService(repo, rzpClient)
+	paymentController := controller.SetupPaymentController(paymentService)
+
+	routes.SetupRoutes(
+		r,
+		authController,
+		productController,
+		cartController,
+		wishlistController,
+		orderController,
+		paymentController,
+		addressController,
+		jwtManager,
+		repo,
+	)
+
+	r.Run(":" + cfg.Server.Port)
 }

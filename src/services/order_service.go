@@ -10,15 +10,18 @@ import (
 
 	"github.com/google/uuid"
 	"gorm.io/gorm"
+	"voyagear/utils/razorpay"
 )
 
 type OrderService struct {
-	Repo repository.PgSQLRepository
+	Repo           repository.PgSQLRepository
+	RazorpayClient *razorpay.RazorpayClient
 }
 
-func SetupOrderService(repo repository.PgSQLRepository) *OrderService {
+func SetupOrderService(repo repository.PgSQLRepository, rzpClient *razorpay.RazorpayClient) *OrderService {
 	return &OrderService{
-		Repo: repo,
+		Repo:           repo,
+		RazorpayClient: rzpClient,
 	}
 }
 
@@ -130,12 +133,30 @@ func (s *OrderService) PlaceOrder(userID string, req PlaceOrderRequest) (order *
 	}
 
 	newOrder := models.Order{
-		UserID:    uId,
-		Total:     total,
-		Status:    constant.OrderStatusConfirmed,
-		CreatedAt: time.Now(),
-		UpdatedAt: time.Now(),
+		ID:            uuid.New(), // manually assign UUID beforehand to send to payment gateway
+		UserID:        uId,
+		AddressID:     addressID,
+		Total:         total,
+		PaymentMethod: req.PaymentMethod,
+		Status:        constant.OrderStatusPending,
+		PaymentStatus: constant.PaymentStatusPending,
+		CreatedAt:     time.Now(),
+		UpdatedAt:     time.Now(),
 	}
+
+	// ------------- Gateway Sync ----------------
+	// If Razorpay, reach out to their servers to generate an actual remote order ID securely
+	if req.PaymentMethod == constant.PaymentMethodRazorpay {
+		rzpID, err := s.RazorpayClient.CreateOrder(float64(total), newOrder.ID.String())
+		if err != nil {
+			return nil, apperror.New(constant.INTERNALSERVERERROR, "Handshake with Razorpay failed", err)
+		}
+		newOrder.RazorpayOrderID = rzpID
+	} else {
+		// COD logic, skip gateway but mark as conventionally "confirmed" locally
+		newOrder.Status = constant.OrderStatusConfirmed
+	}
+	// -------------------------------------------
 
 	if err = tx.Create(&newOrder).Error; err != nil {
 		return nil, apperror.New(constant.INTERNALSERVERERROR, "Failed to create order", err)

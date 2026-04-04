@@ -4,6 +4,7 @@ import (
 	"time"
 
 	"github.com/google/uuid"
+	"gorm.io/gorm"
 )
 
 type RefreshToken struct {
@@ -14,4 +15,7 @@ type RefreshToken struct {
 	CreatedAt time.Time
 }
 
-
+func (r *RefreshToken) BeforeCreate(tx *gorm.DB) error {
+	r.ID = uuid.New()
+	return nil
+}
